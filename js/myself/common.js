@@ -269,8 +269,18 @@ $("#loginbtn").click(function () {
           if(res.retcode=='000000')
           {
               console.log("登录成功");
+              $("#modal-container-912437").modal('hide');
+
+
+              location.reload();
           }else{
               console.log(res.retinfo);
+              swal({
+                  title: "提示",
+                  text: res.retinfo,
+                  icon: "error",
+                  button: "我知道了",
+              });
           }
         },
         error : function(){
@@ -279,14 +289,9 @@ $("#loginbtn").click(function () {
     });
 })
 
-
-
-
-
-
-
 //登录信息获取
 var user_token=$.cookie("user_token");
+console.log(user_token);
 //若用户已经登录信息获取
 if(user_token!=undefined&&user_token!='')
 {

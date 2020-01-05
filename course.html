@@ -44,7 +44,7 @@
     </style>
 </head>
 <body>
-<!--导航栏-->
+
 <div class="navbar navbar-inverse">
     <!--导航内容容器-->
     <div class="container">
@@ -66,7 +66,23 @@
                 <!--导航栏左侧链接-->
                 <ul class="nav navbar-nav navbar-left">
                     <li><a href="#">学习视频</a></li>
-                    <li><a href="#">题库练习</a></li>
+                    <li class="dropdown ">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">题库练习<strong class="caret"></strong></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="#">马原题库</a>
+                            </li>
+                            <li>
+                                <a href="#">思修题库</a>
+                            </li>
+                            <li>
+                                <a href="#">近代史题库</a>
+                            </li>
+                            <li>
+                                <a href="#">毛概题库</a>
+                            </li>
+                        </ul>
+                    </li>
                     <li><a href="#">模拟考试</a></li>
                     <li><a href="#">我的学习</a></li>
                     <li><a href="#">我的班级</a></li>
@@ -74,7 +90,7 @@
                 <!--导航栏右侧链接-->
                 <ul class="navbar-nav nav navbar-right">
                     <!--未登录时导航栏登录注册按钮-->
-                    <li id="nologin">
+                    <li id="nologin" style="display: block">
                         <a id="mymodal" href="#modal-container-912437" data-toggle="modal">
                             <span class="glyphicon glyphicon-user "></span>&nbsp;登录/注册
                         </a>
@@ -83,17 +99,18 @@
                     <li id="islogin" style="display: none">
                         <div class="dropdown" style="margin-top: 10px ;margin-left: 10px">
                             <!--用户头像-->
-                            <span class="dropdown-toggle" data-toggle="dropdown" style="cursor: pointer">
-                                <img height="26px" class="img-rounded"
-                                     src="https://aliyun-lc-upload.oss-cn-hangzhou.aliyuncs.com/aliyun-lc-upload/default_avatar.png"
-                                     alt="">
-                                <i class="caret"></i>
+                            <span  class="dropdown-toggle" data-toggle="dropdown" style="cursor: pointer">
+                                <img  id="userimg" height="26px" class="img-rounded"
+                                      src="https://aliyun-lc-upload.oss-cn-hangzhou.aliyuncs.com/aliyun-lc-upload/default_avatar.png"
+                                      alt="">
+                                <i class="caret" style="color: white"></i>
+                                <span id="username" style="color: white"></span>
                             </span>
                             <!--下下拉菜单-->
                             <ul class="dropdown-menu">
                                 <li><a href="">个人信息管理</a></li>
                                 <li><a href="">修改密码</a></li>
-                                <li><a href="">退出登录</a></li>
+                                <li><a href="javascript:logout()">退出登录</a></li>
                             </ul>
                         </div>
                     </li>
@@ -102,6 +119,8 @@
         </div>
     </div>
 </div>
+
+<!--面包屑导航-->
 <div class="container">
     <div class="row clearfix">
         <div class="col-md-12 column">
@@ -146,7 +165,7 @@
                                         <p>
                                              <h3 style="color: red">￥ 99</h3>
                                         </p>
-                                        <p style="height: 188px"></p>
+                                        <p style="height: 160px"></p>
                                         <button type="button" style="width: 180px" class="btn btn-default  btn-success btn-lg">加入学习</button>
                                     </div>
 
@@ -246,6 +265,7 @@
 </footer>
 
 <!--登录注册模态框-->
+<!--登录注册模态框-->
 <div class="modal fade" id="modal-container-912437" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" style=" margin-top:60px;width: 440px;height: 436px ">
         <div class="modal-content">
@@ -253,9 +273,9 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <ul id="myTab" class="nav nav-pills">
                     <li class="active">
-                        <a href="#doLogin" data-toggle="tab">登录</a>
+                        <a href="#doLogin"  data-toggle="tab">登录</a>
                     </li>
-                    <li>
+                    <li >
                         <a href="#doReg" data-toggle="tab" id="regbtn">注册</a>
                     </li>
                 </ul>
@@ -265,10 +285,10 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-offset-2 col-md-8">
-                                <form action="" role="form">
+                                <form action="" role="form" id="loginform">
                                     <div class="input-group">
                                         <span class="input-group-addon "> <span class="glyphicon glyphicon-user"></span></span>
-                                        <input type="text" id="name" class="form-control" placeholder="用户名">
+                                        <input type="text" id="account" class="form-control" placeholder="用户名">
                                     </div>
                                     <br>
                                     <div class="input-group">
@@ -276,7 +296,7 @@
                                         <input type="text" id="pwd" class="form-control" placeholder="密码">
                                     </div>
                                     <br>
-                                    <button class="btn btn-info btn-block">登录</button>
+                                    <button class="btn btn-info btn-block" onclick='return false' id="loginbtn">登录</button>
                                     <br>
                                     <p>
                                         <small class="pull-left"><input type="checkbox" value="remember"
@@ -296,7 +316,7 @@
                         <p class="text-center">
                             <a><i class="fa fa-qq fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
                             <a><i class="fa fa-weixin fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
-                            <a><i class="fa fa-weibo fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
+                            <a href="https://api.weibo.com/oauth2/authorize?client_id=4233560222&response_type=code&redirect_uri=http://www.gaoxi.com/auths/login/weiboLogin"><i class="fa fa-weibo fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
                         </p>
                     </div>
 
@@ -305,15 +325,15 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-offset-2 col-md-8">
-                                <form action="" role="form">
+                                <form action="#" role="form" id="regform">
                                     <div class="input-group">
                                         <span class="input-group-addon "> <span class="glyphicon glyphicon-phone"></span></span>
-                                        <input type="text" id="regname" class="form-control" placeholder="手机号">
+                                        <input type="text" id="regname"  name="username" class="form-control" placeholder="手机号">
                                     </div>
                                     <br>
                                     <div class="input-group">
                                         <span class="input-group-addon "> <span class="glyphicon glyphicon-lock"></span></span>
-                                        <input type="text" id="regpwd" class="form-control" placeholder="密码">
+                                        <input type="password" id="regpwd" name="userpwd" class="form-control" placeholder="密码长度 6~10位">
                                     </div>
                                     <br>
                                     <!--拼图验证-->
@@ -322,18 +342,16 @@
                                     <br>
                                     <!--手机验证码-->
                                     <div class="input-group">
-                                        <div class="input-group">
-                                            <input type="text" id="phonecode" class="form-control" placeholder="请输入手机验证码">
-                                            <span class="input-group-btn">
-                                            <button class="btn btn-info" type="button">发送验证码</button>
+                                        <input type="text" id="phonecode" class="form-control"  placeholder="请输入手机验证码">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-info" type="button" id="captchabtn" >发送验证码</button>
                                         </span>
-                                        </div>
                                     </div>
                                     <br>
-                                    <p style="display: none">
-                                        <small class="text-danger">用户名重复</small>
+                                    <p style="display: none" id="regshow">
+                                        <small class="text-danger" id="regtip"></small>
                                     </p>
-                                    <button class="btn btn-info btn-block">立即注册</button>
+                                    <button class="btn btn-info btn-block"  onclick='return false' id="doregNow">立即注册</button>
                                     <br>
                                     <p>
                                         <small class="pull-left"><input type="checkbox" value="remember"
@@ -352,53 +370,15 @@
     </div>
 </div>
 
-
 <script src="js/jquery-3.3.1.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <!--滑动验证码js-->
 <script src="js/verify.js"></script>
+<script src="js/jquery.cookie.js"></script>
+<script src="js/jquery.timers.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="js/myself/common.js"/>
 <script>
-    /*必须加上这一句不然tooltip无效果*/
-    $(function () {
-        $("[data-toggle='tooltip']").tooltip();
-    });
-    /*打开注册弹框并，关闭登录框*/
-    function goRegister() {
-        $('#myTab li:eq(1) a').tab('show');
-    }
-    function goLogin() {
-        $('#myTab li:eq(0) a').tab('show')
-    }
-    $('#mpanel4').slideVerify({
-        type: 2,		//类型
-        vOffset: 5,	//误差量，根据需求自行调整
-        vSpace: 5,	//间隔
-        imgName: ['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg'],
-        imgSize: {
-            width: '262px',
-            height: '150px',
-        },
-        blockSize: {
-            width: '40px',
-            height: '40px',
-        },
-        barSize: {
-            width: '262px',
-            height: '30px',
-        },
-        ready: function () {
-            console.log('hello')
-        },
-        success: function () {
-            alert('验证成功，添加你自己的代码！');
-            //......后续操作
-        },
-        error: function () {
-//		        	alert('验证失败！');
-        }
-    });
-
-
 </script>
 </body>
 </html>
