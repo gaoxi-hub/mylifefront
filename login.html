@@ -1,0 +1,108 @@
+
+<div class="modal-dialog" style=" margin-top:60px;width: 440px;height: 436px ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <ul id="myTab" class="nav nav-pills">
+                    <li class="active">
+                        <a href="#doLogin"  data-toggle="tab">登录</a>
+                    </li>
+                    <li >
+                        <a href="#doReg" data-toggle="tab" id="regbtn">注册</a>
+                    </li>
+                </ul>
+            </div>
+            <div id="myTabContent" class="tab-content">
+                <div id="doLogin" class="tab-pane fade in active">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-offset-2 col-md-8">
+                                <form action="" role="form" id="loginform">
+                                    <div class="input-group">
+                                        <span class="input-group-addon "> <span class="glyphicon glyphicon-user"></span></span>
+                                        <input type="text" id="account" class="form-control" placeholder="用户名">
+                                    </div>
+                                    <br>
+                                    <div class="input-group">
+                                        <span class="input-group-addon "> <span class="glyphicon glyphicon-lock"></span></span>
+                                        <input type="text" id="pwd" class="form-control" placeholder="密码">
+                                    </div>
+                                    <br>
+                                    <button class="btn btn-info btn-block" onclick='return false' id="loginbtn">登录</button>
+                                    <br>
+                                    <p>
+                                        <small class="pull-left"><input type="checkbox" value="remember"
+                                                                        class="pull-left">十天内免登录
+                                        </small>
+                                        <a class="pull-right" href="javascript:goRegister();" style="cursor: pointer"
+                                           id="goRegLink">
+                                            <small>去注册 ></small>
+                                        </a>
+                                    </p>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <p class="small text-center">第三方登录</p>
+                        <p class="text-center">
+                            <a><i class="fa fa-qq fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
+                            <a><i class="fa fa-weixin fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
+                            <a href="https://api.weibo.com/oauth2/authorize?client_id=4233560222&response_type=code&redirect_uri=http://www.gaoxi.com/auths/login/weiboLogin"><i class="fa fa-weibo fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
+                        </p>
+                    </div>
+
+                </div>
+                <div id="doReg" class="tab-pane fade">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-offset-2 col-md-8">
+                                <form action="#" role="form" id="regform">
+                                    <div class="input-group">
+                                        <span class="input-group-addon "> <span class="glyphicon glyphicon-phone"></span></span>
+                                        <input type="text" id="regname"  name="username" class="form-control" placeholder="手机号">
+                                    </div>
+                                    <br>
+                                    <div class="input-group">
+                                        <span class="input-group-addon "> <span class="glyphicon glyphicon-lock"></span></span>
+                                        <input type="password" id="regpwd" name="userpwd" class="form-control" placeholder="密码长度 6~10位">
+                                    </div>
+                                    <br>
+                                    <!--拼图验证-->
+                                    <div id="mpanel4">
+                                    </div>
+                                    <br>
+                                    <!--手机验证码-->
+                                    <div class="input-group">
+                                        <input type="text" id="phonecode" class="form-control"  placeholder="请输入手机验证码">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-info" type="button" id="captchabtn" >发送验证码</button>
+                                        </span>
+                                    </div>
+                                    <br>
+                                    <p style="display: none" id="regshow">
+                                        <small class="text-danger" id="regtip"></small>
+                                    </p>
+                                    <button class="btn btn-info btn-block"  onclick='return false' id="doregNow">立即注册</button>
+                                    <br>
+                                    <p>
+                                        <small class="pull-left"><input type="checkbox" value="remember"
+                                                                        class="pull-left">我已阅读<a>《平台协议》</a></small>
+                                        <a class="pull-right" href="javascript:goLogin();" style="cursor: pointer">
+                                            <small>去登录 ></small>
+                                        </a>
+                                    </p>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--验证码-->
+<script src="js/verify.js"></script>
+<!--sweet 提示框-->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<!--登录，注册逻辑-->
+<script src="js/myself/common.js"/>

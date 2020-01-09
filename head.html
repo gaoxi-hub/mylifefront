@@ -1,0 +1,75 @@
+<!--导航栏-->
+
+    <!--导航内容容器-->
+    <div class="container">
+        <!--导航列-->
+        <div class="col-md-12">
+            <!--导航头，-->
+            <div class="navbar-header" style="margin-top: 10px">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mynav">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="" class="navbar-header" style="margin-top: -7px">
+                    <img src="img/logo.png" id="logo" alt="">
+                </a>
+            </div>
+            <!---->
+            <div class="collapse navbar-collapse" id="mynav">
+                <!--导航栏左侧链接-->
+                <ul class="nav navbar-nav navbar-left">
+                    <li><a href="#">学习视频</a></li>
+                    <li class="dropdown ">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">题库练习<strong class="caret"></strong></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="#">马原题库</a>
+                            </li>
+                            <li>
+                                <a href="#">思修题库</a>
+                            </li>
+                            <li>
+                                <a href="#">近代史题库</a>
+                            </li>
+                            <li>
+                                <a href="#">毛概题库</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a href="#">模拟考试</a></li>
+                    <li><a href="#">我的学习</a></li>
+                    <li><a href="#">我的班级</a></li>
+                </ul>
+                <!--导航栏右侧链接-->
+                <ul class="navbar-nav nav navbar-right">
+                    <!--未登录时导航栏登录注册按钮-->
+                    <li id="nologin" style="display: block">
+                        <a id="mymodal" href="#modal-container-912437" data-toggle="modal">
+                            <span class="glyphicon glyphicon-user "></span>&nbsp;登录/注册
+                        </a>
+                    </li>
+                    <!--登录后导航栏状态-->
+                    <li id="islogin" style="display: none">
+                        <div class="dropdown" style="margin-top: 10px ;margin-left: 10px">
+                            <!--用户头像-->
+                            <span  class="dropdown-toggle" data-toggle="dropdown" style="cursor: pointer">
+                                <img  id="userimg" height="26px" class="img-rounded"
+                                      src="https://aliyun-lc-upload.oss-cn-hangzhou.aliyuncs.com/aliyun-lc-upload/default_avatar.png"
+                                      alt="">
+                                <i class="caret" style="color: white"></i>
+                                <span id="username" style="color: white"></span>
+                            </span>
+                            <!--下下拉菜单-->
+                            <ul class="dropdown-menu">
+                                <li><a href="">个人信息管理</a></li>
+                                <li><a href="">修改密码</a></li>
+                                <li><a href="javascript:logout()">退出登录</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+

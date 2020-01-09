@@ -8,118 +8,16 @@
     <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
     <!--验证码css-->
     <link rel="stylesheet" href="css/verify.css">
-    <style>
+    <link rel="stylesheet" href="css/common.css">
 
-
-        footer.white-wrapper {
-            padding: 60px 0;
-            clear: both;
-            background-color: black;
-
-        }
-
-        footer.white-wrapper *, footer.white-wrapper a {
-            color: #fff;
-        }
-
-        footer.white-wrapper span.copyright {
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            text-transform: none;
-            line-height: 40px;
-            padding: 15px 10px;
-            display: block;
-            font-size: 14px;
-        }
-
-        footer.white-wrapper .social-links li {
-            padding: 15px 30px
-        }
-
-        footer.white-wrapper .social-links li a {
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 26px;
-        }
-    </style>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.cookie.js"></script>
+    <script src="js/jquery.timers.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </head>
 <body>
-
-<div class="navbar navbar-inverse">
-    <!--导航内容容器-->
-    <div class="container">
-        <!--导航列-->
-        <div class="col-md-12">
-            <!--导航头，-->
-            <div class="navbar-header" style="margin-top: 10px">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mynav">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a href="" class="navbar-header" style="margin-top: -7px">
-                    <img src="img/logo.png" id="logo" alt="">
-                </a>
-            </div>
-            <!---->
-            <div class="collapse navbar-collapse" id="mynav">
-                <!--导航栏左侧链接-->
-                <ul class="nav navbar-nav navbar-left">
-                    <li><a href="#">学习视频</a></li>
-                    <li class="dropdown ">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">题库练习<strong class="caret"></strong></a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="#">马原题库</a>
-                            </li>
-                            <li>
-                                <a href="#">思修题库</a>
-                            </li>
-                            <li>
-                                <a href="#">近代史题库</a>
-                            </li>
-                            <li>
-                                <a href="#">毛概题库</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li><a href="#">模拟考试</a></li>
-                    <li><a href="#">我的学习</a></li>
-                    <li><a href="#">我的班级</a></li>
-                </ul>
-                <!--导航栏右侧链接-->
-                <ul class="navbar-nav nav navbar-right">
-                    <!--未登录时导航栏登录注册按钮-->
-                    <li id="nologin" style="display: block">
-                        <a id="mymodal" href="#modal-container-912437" data-toggle="modal">
-                            <span class="glyphicon glyphicon-user "></span>&nbsp;登录/注册
-                        </a>
-                    </li>
-                    <!--登录后导航栏状态-->
-                    <li id="islogin" style="display: none">
-                        <div class="dropdown" style="margin-top: 10px ;margin-left: 10px">
-                            <!--用户头像-->
-                            <span  class="dropdown-toggle" data-toggle="dropdown" style="cursor: pointer">
-                                <img  id="userimg" height="26px" class="img-rounded"
-                                      src="https://aliyun-lc-upload.oss-cn-hangzhou.aliyuncs.com/aliyun-lc-upload/default_avatar.png"
-                                      alt="">
-                                <i class="caret" style="color: white"></i>
-                                <span id="username" style="color: white"></span>
-                            </span>
-                            <!--下下拉菜单-->
-                            <ul class="dropdown-menu">
-                                <li><a href="">个人信息管理</a></li>
-                                <li><a href="">修改密码</a></li>
-                                <li><a href="javascript:logout()">退出登录</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-
+<div class="navbar navbar-inverse" id="commonhead"></div>
 <!--面包屑导航-->
 <div class="container">
     <div class="row clearfix">
@@ -135,10 +33,7 @@
         </div>
     </div>
 </div>
-
-
 <!--详细展示-->
-
 <div class="container">
     <div class="row clearfix">
         <div class="col-md-12 column">
@@ -237,148 +132,25 @@
 <!--页面底部-->
 
 <footer class="white-wrapper">
-    <div class="container-fluid">
-        <div class="row text-center">
-            <div class="col-md-12 wow fadeIn mb30" data-wow-delay="0.2s"> <span class="copyright">创作于2019~2020年 <a href="#" target="_blank" title="毕业设计">毕业设计</a> - 作者 <a href="https://me.csdn.net/Gao__xi" title="高溪" target="_blank">高溪</a></span>
-            </div>
-            <div class="col-md-12">
-                <ul class="list-inline social-links wow fadeIn" data-wow-delay="0.2s">
-                    <li>
-                        <a href="#"><i class="fa fa-qq"></i></a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-wechat"></i></a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-weibo"></i></a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-google"></i></a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-linux"></i></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
 </footer>
 
 <!--登录注册模态框-->
-<!--登录注册模态框-->
 <div class="modal fade" id="modal-container-912437" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style=" margin-top:60px;width: 440px;height: 436px ">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <ul id="myTab" class="nav nav-pills">
-                    <li class="active">
-                        <a href="#doLogin"  data-toggle="tab">登录</a>
-                    </li>
-                    <li >
-                        <a href="#doReg" data-toggle="tab" id="regbtn">注册</a>
-                    </li>
-                </ul>
-            </div>
-            <div id="myTabContent" class="tab-content">
-                <div id="doLogin" class="tab-pane fade in active">
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-offset-2 col-md-8">
-                                <form action="" role="form" id="loginform">
-                                    <div class="input-group">
-                                        <span class="input-group-addon "> <span class="glyphicon glyphicon-user"></span></span>
-                                        <input type="text" id="account" class="form-control" placeholder="用户名">
-                                    </div>
-                                    <br>
-                                    <div class="input-group">
-                                        <span class="input-group-addon "> <span class="glyphicon glyphicon-lock"></span></span>
-                                        <input type="text" id="pwd" class="form-control" placeholder="密码">
-                                    </div>
-                                    <br>
-                                    <button class="btn btn-info btn-block" onclick='return false' id="loginbtn">登录</button>
-                                    <br>
-                                    <p>
-                                        <small class="pull-left"><input type="checkbox" value="remember"
-                                                                        class="pull-left">十天内免登录
-                                        </small>
-                                        <a class="pull-right" href="javascript:goRegister();" style="cursor: pointer"
-                                           id="goRegLink">
-                                            <small>去注册 ></small>
-                                        </a>
-                                    </p>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <p class="small text-center">第三方登录</p>
-                        <p class="text-center">
-                            <a><i class="fa fa-qq fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
-                            <a><i class="fa fa-weixin fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
-                            <a href="https://api.weibo.com/oauth2/authorize?client_id=4233560222&response_type=code&redirect_uri=http://www.gaoxi.com/auths/login/weiboLogin"><i class="fa fa-weibo fa-2x"></i></a>&nbsp;&nbsp;&nbsp;
-                        </p>
-                    </div>
-
-                </div>
-                <div id="doReg" class="tab-pane fade">
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-offset-2 col-md-8">
-                                <form action="#" role="form" id="regform">
-                                    <div class="input-group">
-                                        <span class="input-group-addon "> <span class="glyphicon glyphicon-phone"></span></span>
-                                        <input type="text" id="regname"  name="username" class="form-control" placeholder="手机号">
-                                    </div>
-                                    <br>
-                                    <div class="input-group">
-                                        <span class="input-group-addon "> <span class="glyphicon glyphicon-lock"></span></span>
-                                        <input type="password" id="regpwd" name="userpwd" class="form-control" placeholder="密码长度 6~10位">
-                                    </div>
-                                    <br>
-                                    <!--拼图验证-->
-                                    <div id="mpanel4">
-                                    </div>
-                                    <br>
-                                    <!--手机验证码-->
-                                    <div class="input-group">
-                                        <input type="text" id="phonecode" class="form-control"  placeholder="请输入手机验证码">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-info" type="button" id="captchabtn" >发送验证码</button>
-                                        </span>
-                                    </div>
-                                    <br>
-                                    <p style="display: none" id="regshow">
-                                        <small class="text-danger" id="regtip"></small>
-                                    </p>
-                                    <button class="btn btn-info btn-block"  onclick='return false' id="doregNow">立即注册</button>
-                                    <br>
-                                    <p>
-                                        <small class="pull-left"><input type="checkbox" value="remember"
-                                                                        class="pull-left">我已阅读<a>《平台协议》</a></small>
-                                        <a class="pull-right" href="javascript:goLogin();" style="cursor: pointer">
-                                            <small>去登录 ></small>
-                                        </a>
-                                    </p>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
-<script src="js/jquery-3.3.1.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<!--滑动验证码js-->
-<script src="js/verify.js"></script>
-<script src="js/jquery.cookie.js"></script>
-<script src="js/jquery.timers.js"></script>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<script src="js/myself/common.js"/>
+
+
 <script>
+    $("#commonhead").load("head.html");
+    $(".white-wrapper").load("foot.html");
+    $("#modal-container-912437").load("login.html");
+
+    $(function () {
+        /*必须加上这一句不然tooltip无效果*/
+        $("[data-toggle='tooltip']").tooltip();
+    });
+
+
 </script>
 </body>
 </html>

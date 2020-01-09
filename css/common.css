@@ -1,0 +1,30 @@
+footer.white-wrapper {
+    padding: 60px 0;
+    clear: both;
+    background-color: black;
+
+}
+
+footer.white-wrapper *, footer.white-wrapper a {
+    color: #fff;
+}
+
+footer.white-wrapper span.copyright {
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-transform: none;
+    line-height: 40px;
+    padding: 15px 10px;
+    display: block;
+    font-size: 14px;
+}
+
+footer.white-wrapper .social-links li {
+    padding: 15px 30px
+}
+
+footer.white-wrapper .social-links li a {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 26px;
+}
