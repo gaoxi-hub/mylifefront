@@ -15,6 +15,7 @@
     <script src="js/jquery.cookie.js"></script>
     <script src="js/jquery.timers.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 <body>
 <div class="navbar navbar-inverse" id="commonhead"></div>
@@ -37,7 +38,8 @@
 <div class="container">
     <div class="row clearfix">
         <div class="col-md-12 column">
-            <div class="panel panel-warning">
+            <!--视频panel-->
+            <div class="panel panel-warning" id="courseDetailHead">
                 <div class="panel-heading">
                     <h3 class="panel-title">
                         视频课程详情
@@ -45,56 +47,54 @@
                 </div>
                 <div class="panel-body">
                     <div class="container">
-                        <div class="row clearfix">
+                        <div class="row clearfix" >
                                     <div class="col-md-6 column">
-                                        <img alt="140x140"  class="img-responsive" src="img/xia.jpg" />
+                                        <img alt="140x140"  width="555" height="346.88"   v-bind:src="headInfo.courseImgUrl" />
                                     </div>
                                     <div class="col-md-6 column">
                                         <h3>
-                                            毛泽东概率
+                                            {{headInfo.courseName}}
                                         </h3>
                                         <p>
-                                            <span class="label label-info">观看人数:30</span>
-                                            <span class="label-danger label">排名前5</span>
+                                            <span class="label label-info">观看人数:{{headInfo.learnNum}}</span>
+                                            <span class="label-danger label">作者:{{headInfo.courseAuthor}}</span>
+                                            <span class="label-warning label">{{ cctype}}</span>
                                         </p>
                                         <p>
-                                             <h3 style="color: red">￥ 99</h3>
+                                             <h3 style="color: red" >{{ ccprice }}</h3>
                                         </p>
                                         <p style="height: 160px"></p>
-                                        <button type="button" style="width: 180px" class="btn btn-default  btn-success btn-lg">加入学习</button>
+                                        <button type="button" style="width: 180px" class="btn btn-default  btn-success btn-lg">{{  mylearn }}</button>
                                     </div>
 
 
                         </div>
                     </div>
                 </div>
-                <div class="panel-footer">
+                <div class="panel-footer" v-show="yourState!=0">
                     <h4>完成情况</h4>
                     <div class="progress progress-striped active">
                         <!--style 必须有-->
                         <div class="progress-bar progress-bar-success" role="progressbar"
-                             aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
-                             style="width: 60%;">
-                            <span class="sr-only">40% 完成</span>
+                             aria-valuenow="56" aria-valuemin="0" aria-valuemax="100"
+                             v-bind:style="{ width: cprocess + '%' }">
+                            <span class="sr-only">{{cprocess}} %</span>
                         </div>
                     </div>
                 </div>
             </div>
+
+
+
+            <!--视频tab-->
             <div class="tabbable" id="tabs-185254">
                 <ul class="nav nav-tabs">
-                    <li>
-                        <a href="#panel-300959" data-toggle="tab">介绍</a>
-                    </li>
                     <li class="active">
                         <a href="#panel-803260" data-toggle="tab">目录</a>
                     </li>
                 </ul>
+                <!--目录内容展示-->
                 <div class="tab-content">
-                    <div class="tab-pane" id="panel-300959">
-                        <p>
-                            I'm in Section 1.
-                        </p>
-                    </div>
                     <div class="tab-pane active" id="panel-803260">
                         <div class="panel-group" id="panel-867161">
                             <div class="panel panel-default">
@@ -107,6 +107,8 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <!---->
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <a class="panel-title collapsed" data-toggle="collapse" data-parent="#panel-867161" href="#panel-element-790373">第二章：</a>
@@ -117,6 +119,7 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -144,10 +147,95 @@
     $("#commonhead").load("head.html");
     $(".white-wrapper").load("foot.html");
     $("#modal-container-912437").load("login.html");
-
+    //获取courseId
+    var nowhref=window.location.href;
+    //alert(nowhref);
+    var courseId=nowhref.split('?')[1].split("=")[1];
+    console.log("课程号为:"+courseId);
+    var cTypeName=["","马原","思修","近代史","毛概"];
     $(function () {
         /*必须加上这一句不然tooltip无效果*/
         $("[data-toggle='tooltip']").tooltip();
+        //课程详情头部内容
+        var courseDetailHead = new Vue({
+            el:'#courseDetailHead',
+            data:{
+                headInfo:{
+                    courseImgUrl:"http://q4334xp0f.bkt.clouddn.com/20745CB8F35EF31164F6991276FF507F.jpg",
+                    courseName:"毛泽东思想和中国特色社会主义理论体系概论",
+                    courseAuthor:"高溪",
+                    courseCType:4,
+                    totalResNum:20,
+                    learnNum:10,
+                    courseType:0,
+                    coursePrice:0,
+                    yourState:0
+                }
+            },
+            computed:{
+              //计算课程价格
+                ccprice:function(){
+                  if(this.headInfo.courseType==0){
+                      return "免费";
+                  }else{
+                      return this.headInfo.coursePrice;
+                  }
+              },
+                //计算学习状态
+               mylearn:function(){
+                  if(this.headInfo.yourState==0){
+                      return "加入学习";
+                  }else{
+                      return "正在学习";
+                  }
+               },
+                //课程的类别
+                cctype:function () {
+                    return cTypeName[this.headInfo.courseCType];
+                },
+                //学习进度
+                cprocess:function () {
+                    return this.headInfo.learnNum/this.headInfo.totalResNum*100;
+                }
+            },
+            created:function(){
+                var user_token=$.cookie("user_token");
+                if(user_token==undefined||user_token==''){
+                    user_token="";
+                }
+                that=this;
+                $.ajax({
+                    url : "http://www.gaoxi.com/courses/getCourseHeadInfo",
+                    type : "GET",
+                    data:{"courseId":courseId,"userToken":user_token},
+                    async: false,
+                    success : function(res){
+
+                        console.log(res.data);
+                        that.headInfo=res.data;
+                    },
+                    error : function(){
+                        console.log('请求失败');
+                    }
+                });
+            },
+            method:{
+
+            }
+        })
+
+
+
+
+
+
+
+
+
+
+
+
+
     });
 
 

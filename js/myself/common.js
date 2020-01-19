@@ -302,11 +302,14 @@ if(user_token!=undefined&&user_token!='')
         data: {"userToken":user_token},
         success : function(res){
             var userInfo=res.data;
-            console.log(userInfo);
-            $("#nologin").css("display","none");
-            $("#islogin").css("display",'block');
-            if(userInfo.userImg !=''){   $("#userimg").attr("src",userInfo.userImg);}
-            $("#username").text(userInfo.userName);
+            if(userInfo!=null){
+                console.log(userInfo);
+                $("#nologin").css("display","none");
+                $("#islogin").css("display",'block');
+                if(userInfo.userImg !=''){   $("#userimg").attr("src",userInfo.userImg);}
+                $("#username").text(userInfo.userName);
+            }
+
         },
         error : function(){
             alert('请求失败');

@@ -63,28 +63,36 @@
                 </ol>
                 <div class="carousel-inner" id="wheelContainer">
                     <div class="item active">
-                        <img alt="" v-bind:src="wheelInfo[0].courseImg"/>
+                      <a v-bind:href=`http://www.gaoxi.com/course.html?courseId=${wheelInfo[0].courseId}`>
+                          <img alt="" v-bind:src="wheelInfo[0].courseImg"/></a>
                         <div class="carousel-caption">
                             <h4 v-text="wheelInfo[0].courseName"></h4>
                             <p v-text="wheelInfo[0].courseIntroduction"></p>
                         </div>
                     </div>
                     <div class="item">
-                        <img alt="" v-bind:src="wheelInfo[1].courseImg"/>
+                        <a v-bind:href=`http://www.gaoxi.com/course.html?courseId=${wheelInfo[1].courseId}`>
+                            <img alt="" v-bind:src="wheelInfo[1].courseImg"/>
+                        </a>
                         <div class="carousel-caption">
                             <h4 v-text="wheelInfo[1].courseName"></h4>
                             <p v-text="wheelInfo[1].courseIntroduction"></p>
                         </div>
                     </div>
                     <div class="item">
-                        <img alt="" v-bind:src="wheelInfo[2].courseImg"/>
+                        <a v-bind:href=`http://www.gaoxi.com/course.html?courseId=${wheelInfo[2].courseId}`>
+                            <img alt="" v-bind:src="wheelInfo[2].courseImg"/>
+                        </a>
                         <div class="carousel-caption">
                             <h4 v-text="wheelInfo[2].courseName"></h4>
                             <p v-text="wheelInfo[2].courseIntroduction"></p>
                         </div>
                     </div>
+                    <!--需要添加指令 才可以解析${}-->
                     <div class="item">
+                        <a v-bind:href=`http://www.gaoxi.com/course.html?courseId=${wheelInfo[3].courseId}`>
                         <img alt="" v-bind:src="wheelInfo[3].courseImg"/>
+                        </a>
                         <div class="carousel-caption">
                             <h4 v-text="wheelInfo[3].courseName"></h4>
                             <p v-text="wheelInfo[3].courseIntroduction"></p>
@@ -215,7 +223,7 @@
          '                            <p data-toggle="tooltip" data-placement="bottom" v-bind:title="videoinfo.videointro" v-text="videoinfo.videointro">\n' +
          '                            </p>\n' +
          '                            <p class="text-right">\n' +
-         '                                <a class="btn btn-primary" v-bind:href="videoinfo.videoUrl">立即学习</a>\n' +
+         '                                <a class="btn btn-primary" v-bind:href="`http://www.gaoxi.com/course.html?courseId=${videoinfo.videoUrl}`">立即学习</a>\n' +
          '                            </p>\n' +
          '                        </div>\n' +
          '                    </div>\n' +
@@ -229,15 +237,38 @@
 
     $(function () {
 
+        /*
+        * 1.Vue实例的生命周期,也就是从 无---->有 ----->无 ,和人一样经历不同阶段
+        * 2.created: 可以用于请求初始化的数据，此时html页面上还没有相应的dom元素
+        *   ①在这里ajax请求要用同步的策略
+        * 3.mounted: 页面中已经有dom了
+        *
+        * */
+
+
 
         var wheelPlant=new Vue({
             el:"#wheelContainer",
             data:{
-                wheelInfo:[{'courseImg':"img/chun.jpg",'courseName':'春天课程',"courseIntroduction":"非常好看"},
-                    {'courseImg':"img/xia.jpg",'courseName':'夏天课程',"courseIntroduction":"特别好看"},
-                    {'courseImg':"img/qiu.jpg",'courseName':'秋天课程',"courseIntroduction":"十分好看"},
-                    {'courseImg':"img/winter.jpg",'courseName':'冬天课程',"courseIntroduction":"十分特别好看"}]
+                wheelInfo:[{'courseId':'1','courseImg':"img/chun.jpg",'courseName':'春天课程',"courseIntroduction":"非常好看"},
+                    {'courseId':'1','courseImg':"img/xia.jpg",'courseName':'夏天课程',"courseIntroduction":"特别好看"},
+                    {'courseId':'1','courseImg':"img/qiu.jpg",'courseName':'秋天课程',"courseIntroduction":"十分好看"},
+                    {'courseId':'1','courseImg':"img/winter.jpg",'courseName':'冬天课程',"courseIntroduction":"十分特别好看"}]
             },
+           created:function(){
+              that=this;
+               $.ajax({
+                   url : "http://www.gaoxi.com/courses/getWheelInfo",
+                   type : "GET",
+                   async: false,
+                   success : function(res){
+                       that.wheelInfo=res.data;
+                   },
+                   error : function(){
+                       console.log('请求失败');
+                   }
+               });
+           },
             methods:{
 
             }
@@ -247,11 +278,26 @@
         var videoRecom=new Vue({
             el:"#videorecommendation",
             data:{
-                videoInfoList:[{"videoImg":"img/chun.jpg","videoName":"入门经典","videointro":"这个视频课程十分的好看","videoUrl":"http://www.gaoxi.com"},
-                    {"videoImg":"img/chun.jpg","videoName":"入门经典","videointro":"这个视频课程十分的好看","videoUrl":"http://www.gaoxi.com"},
-                    {"videoImg":"img/chun.jpg","videoName":"入门经典","videointro":"这个视频课程十分的好看","videoUrl":"http://www.gaoxi.com"},
-                    {"videoImg":"img/chun.jpg","videoName":"入门经典","videointro":"这个视频课程十分的好看","videoUrl":"http://www.gaoxi.com"}
+                videoInfoList:[{"videoImg":"img/chun.jpg","videoName":"入门经典","videointro":"这个视频课程十分的好看","videoUrl":"1"},
+                    {"videoImg":"img/chun.jpg","videoName":"入门经典","videointro":"这个视频课程十分的好看","videoUrl":"2"},
+                    {"videoImg":"img/chun.jpg","videoName":"入门经典","videointro":"这个视频课程十分的好看","videoUrl":"3"},
+                    {"videoImg":"img/chun.jpg","videoName":"入门经典","videointro":"这个视频课程十分的好看","videoUrl":"4"}
                 ]
+            },
+            created:function(){
+                that=this;
+                $.ajax({
+                    url : "http://www.gaoxi.com/courses/getIndexVideoInfo",
+                    type : "GET",
+                    data:{"vtype":"0"},
+                    async:false,
+                    success : function(res){
+                        that.videoInfoList=res.data;
+                    },
+                    error : function(){
+                        console.log('请求失败');
+                    }
+                });
             },
             methods:{
 
@@ -267,9 +313,23 @@
                     {"videoImg":"img/xia.jpg","videoName":"马原入门经典","videointro":"一般无人能讲的如此同车","videoUrl":"http://www.gaoxi.com"},
                     {"videoImg":"img/xia.jpg","videoName":"马原入门经典","videointro":"这个视频课程十分的好看","videoUrl":"http://www.gaoxi.com"}
                 ]
+            },
+            created:function(){
+                that=this;
+                $.ajax({
+                    url : "http://www.gaoxi.com/courses/getIndexVideoInfo",
+                    type : "GET",
+                    data:{"vtype":"1"},
+                    async: false,
+                    success : function(res){
+                        that.videoInfoList=res.data;
+                    },
+                    error : function(){
+                        console.log('请求失败');
+                    }
+                });
             }
         })
-
 
         var sixiuvideo=new Vue({
             el:"#sixiuvideo",
@@ -279,10 +339,23 @@
                     {"videoImg":"img/qiu.jpg","videoName":"马原入门经典","videointro":"一般无人能讲的如此同车","videoUrl":"http://www.gaoxi.com"},
                     {"videoImg":"img/qiu.jpg","videoName":"马原入门经典","videointro":"这个视频课程十分的好看","videoUrl":"http://www.gaoxi.com"}
                 ]
+            },
+            created:function(){
+                that=this;
+                $.ajax({
+                    url : "http://www.gaoxi.com/courses/getIndexVideoInfo",
+                    type : "GET",
+                    data:{"vtype":"2"},
+                    async: false,
+                    success : function(res){
+                        that.videoInfoList=res.data;
+                    },
+                    error : function(){
+                        console.log('请求失败');
+                    }
+                });
             }
         })
-
-
         var  historyvideo=new Vue({
             el:"#historyvideo",
             data:{
@@ -291,10 +364,24 @@
                     {"videoImg":"img/winter.jpg","videoName":"马原入门经典","videointro":"一般无人能讲的如此同车","videoUrl":"http://www.gaoxi.com"},
                     {"videoImg":"img/winter.jpg","videoName":"马原入门经典","videointro":"这个视频课程十分的好看","videoUrl":"http://www.gaoxi.com"}
                 ]
-            }
+            },
+            created:function(){
+                that=this;
+                $.ajax({
+                    url : "http://www.gaoxi.com/courses/getIndexVideoInfo",
+                    type : "GET",
+                    data:{"vtype":"3"},
+                    async: false,
+                    success : function(res){
+                        console.log(that.videoInfoList);
+                        that.videoInfoList=res.data;
+                    },
+                    error : function(){
+                        console.log('请求失败');
+                    }
+                });
+            },
         })
-
-
 
         var  maogaivideo=new Vue({
             el:"#maogaivideo",
@@ -304,24 +391,27 @@
                     {"videoImg":"img/vuelogo.jpg","videoName":"马原入门经典","videointro":"一般无人能讲的如此同车","videoUrl":"http://www.gaoxi.com"},
                     {"videoImg":"img/vuelogo.jpg","videoName":"马原入门经典","videointro":"这个视频课程十分的好看","videoUrl":"http://www.gaoxi.com"}
                 ]
+            },
+            created:function(){
+                that=this;
+                $.ajax({
+                    url : "http://www.gaoxi.com/courses/getIndexVideoInfo",
+                    type : "GET",
+                    data:{"vtype":"4"},
+                    async: false,
+                    success : function(res){
+                        console.log(that.videoInfoList);
+                        that.videoInfoList=res.data;
+                    },
+                    error : function(){
+                        console.log('请求失败');
+                    }
+                });
             }
         })
-
-
         /*必须加上这一句不然tooltip无效果*/
         $("[data-toggle='tooltip']").tooltip();
-
     });
-
-
-
-
 </script>
-
-
-
-
-
-
 </body>
 </html>
