@@ -71,7 +71,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel-footer" v-show="yourState!=0">
+                <div class="panel-footer" v-show="headInfo.yourState!=0">
                     <h4>完成情况</h4>
                     <div class="progress progress-striped active">
                         <!--style 必须有-->
@@ -96,30 +96,8 @@
                 <!--目录内容展示-->
                 <div class="tab-content">
                     <div class="tab-pane active" id="panel-803260">
-                        <div class="panel-group" id="panel-867161">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <a class="panel-title collapsed" data-toggle="collapse" data-parent="#panel-867161" href="#panel-element-536219">第一章：hello</a>
-                                </div>
-                                <div id="panel-element-536219" class="panel-collapse collapse">
-                                    <div class="panel-body">
-                                        Anim pariatur cliche...
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!---->
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <a class="panel-title collapsed" data-toggle="collapse" data-parent="#panel-867161" href="#panel-element-790373">第二章：</a>
-                                </div>
-                                <div id="panel-element-790373" class="panel-collapse collapse">
-                                    <div class="panel-body">
-                                        hello'
-                                    </div>
-                                </div>
-                            </div>
-
+                        <div class="panel-group" id="panel-867161" >
+                            <chapter-items v-for="(item,index) in courseChapters"  v-bind:cid="courseid" v-bind:pi="index"  v-bind:coursechapter="item"></chapter-items>
                         </div>
                     </div>
                 </div>
@@ -208,7 +186,7 @@
                     url : "http://www.gaoxi.com/courses/getCourseHeadInfo",
                     type : "GET",
                     data:{"courseId":courseId,"userToken":user_token},
-                    async: false,
+                  //  async: false,
                     success : function(res){
 
                         console.log(res.data);
@@ -220,22 +198,121 @@
                 });
             },
             method:{
-
             }
+        })
+
+        //目录自定义组件
+        Vue.component('chapter-items', {
+            // video-item 组件现在接受一个
+            // "prop"，类似于一个自定义特性。
+            // 这个 prop 名为 videoinfo ,名字必须要小写
+            props: ['coursechapter','pi','cid'],
+            template:' <div class="panel panel-default">\n' +
+            '                                <div class="panel-heading">\n' +
+            '                                    <a class="panel-title collapsed" data-toggle="collapse" data-parent="#panel-867161" :href="`#panel-element-${pi}`">{{coursechapter.chapterName}}</a>\n' +
+            '                                </div>\n' +
+            '                                <div :id="`panel-element-${pi}`" class="panel-collapse collapse">\n' +
+            '                                    <div class="panel-body">\n' +
+            '                                        <ul class="list-group">\n' +
+            '                                            <a  v-for="item in coursechapter.chapterRes"  :href="`http://www.gaoxi.com/playcourse.html?courseId=${cid}&videoId=${item.videoHref}`" class="list-group-item"><i class="fa fa-youtube-play" style="color:red"></i>&nbsp;{{item.videoName}}</a>\n' +
+            '                                        </ul>\n' +
+            '                                    </div>\n' +
+            '                                </div>\n' +
+            '                            </div>'
         })
 
 
 
 
 
-
-
-
-
-
-
-
-
+        //章节内容
+        var chapterContent = new Vue({
+            el:"#panel-867161",
+            data:{
+                courseid:courseId,
+                courseChapters:[
+                    {
+                        'chapterName':'我的帝国我做主',
+                        chapterRes:[
+                            {
+                                videoName:'我的天空',
+                                videoHref:'11'
+                            },
+                            {
+                                videoName:'你的我的大家打',
+                                videoHref:'https://www.baidu.com'
+                            },{
+                                videoName:'你是谁我要积极的学习',
+                                videoHref:'https://www.gaoxicoj.com'
+                            }
+                        ]
+                    },
+                    {
+                        'chapterName':'我的帝国我做主3',
+                        chapterRes:[
+                            {
+                                videoName:'我的天空',
+                                videoHref:'https://www.baidu.com'
+                            },
+                            {
+                                videoName:'你的我的大家打',
+                                videoHref:'https://www.baidu.com'
+                            },{
+                                videoName:'你是谁我要积极的学习',
+                                videoHref:'https://www.gaoxicoj.com'
+                            }
+                        ]
+                    },
+                    {
+                        'chapterName':'我的帝国我做主4',
+                        chapterRes:[
+                            {
+                                videoName:'我的天空',
+                                videoHref:'https://www.baidu.com'
+                            },
+                            {
+                                videoName:'你的我的大家打',
+                                videoHref:'https://www.baidu.com'
+                            },{
+                                videoName:'你是谁我要积极的学习',
+                                videoHref:'https://www.gaoxicoj.com'
+                            }
+                        ]
+                    },
+                    {
+                        'chapterName':'我的帝国我做主6',
+                        chapterRes:[
+                            {
+                                videoName:'我的天空',
+                                videoHref:'https://www.baidu.com'
+                            },
+                            {
+                                videoName:'你的我的大家打',
+                                videoHref:'https://www.baidu.com'
+                            },{
+                                videoName:'你是谁我要积极的学习',
+                                videoHref:'https://www.gaoxicoj.com'
+                            }
+                        ]
+                    }
+                ]
+            },
+            created:function () {
+                that=this;
+                $.ajax({
+                    url : "http://www.gaoxi.com/courses/getCourseChapterInfo",
+                    type : "GET",
+                    data:{"cId":courseId},
+                    async:false,
+                    success : function(res){
+                        that.courseChapters=res.data;
+                    },
+                    error : function(){
+                        console.log('请求失败');
+                    }
+                });
+            }
+        })
     });
 
 

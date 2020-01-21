@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>徐州工程学院思政课学习管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="css/common.css">
+    <!--验证码css-->
+    <link rel="stylesheet" href="css/verify.css">
+    <!--checkbox-->
+    <link rel="stylesheet" href="./css/checkboxs/build.css">
+    <link rel="stylesheet" href="./css/checkboxs/default.css">
+
+    <style>
+        #carousel-345272 img {
+            width: 100%;
+            height: 450px;
+        }
+
+        .thumbnail p {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+    </style>
+
+    <!--vue.js-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/jquery.cookie.js"></script>
+    <script src="js/jquery.timers.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="js/bootstrap-paginator.js"></script>
+</head>
+<body>
+
+
+<div class="navbar navbar-inverse" id="commonhead"></div>
+
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <ul class="breadcrumb">
+                <li >
+                    <a href="#">主页</a>
+                </li>
+                <li class="active">
+                    学习视频
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--搜索栏-->
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <ul class="nav nav-tabs">
+
+                <li class="pull-left">
+                    <div class="checkbox checkbox-success checkbox-inline">
+                        <input type="checkbox" class="styled courseList" id="inlineCheckbox1" value="option1" checked>
+                        <label for="inlineCheckbox1"> 马原 </label>
+                    </div>
+                    <div class="checkbox checkbox-success checkbox-inline">
+                        <input type="checkbox" class="styled courseList" id="inlineCheckbox2" value="option1" checked>
+                        <label for="inlineCheckbox2"> 思修 </label>
+                    </div>
+                    <div class="checkbox checkbox-success checkbox-inline">
+                        <input type="checkbox" class="styled courseList" id="inlineCheckbox3" value="option1" checked>
+                        <label for="inlineCheckbox3"> 近代史 </label>
+                    </div>
+                    <div class="checkbox checkbox-success checkbox-inline">
+                        <input type="checkbox" class="styled courseList" id="inlineCheckbox4" value="option1" checked>
+                        <label for="inlineCheckbox4"> 毛概 </label>
+                    </div>
+
+                    <div class="checkbox checkbox-success checkbox-inline">
+                        <input type="checkbox" class="styled courseList" id="inlineCheckbox5" value="option1" checked>
+                        <label for="inlineCheckbox5"> 学习量多优先 </label>
+                    </div>
+
+
+                </li>
+
+                <li class="pull-left">
+                    &nbsp;&nbsp;
+                    <button class="btn btn-success" id="doFilter">开始筛选</button>
+                </li>
+
+
+
+                <form class="navbar-form navbar-right" role="search">
+                    <div class="form-group">
+                        <input type="text" class="form-control" />
+                    </div>
+                    <button type="submit" class="btn btn-default">搜索</button>
+                </form>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--视频展示区-->
+<div class="container">
+    <!--视频推荐-->
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="row" id="videorecommendation">
+                <video-item
+                        v-for="item in videoInfoList"
+                        v-bind:videoinfo="item">
+                </video-item>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--分页组件-->
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-offset-7 col-md-5 column">
+            <ul id="pageLimit">
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<footer class="white-wrapper"></footer>
+<!--登录注册模态框-->
+<div class="modal fade" id="modal-container-912437" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+</div>
+<script>
+     $("#commonhead").load("head.html");
+     $(".white-wrapper").load("foot.html");
+     $("#modal-container-912437").load("login.html");
+     Vue.component('video-item', {
+         // video-item 组件现在接受一个
+         // "prop"，类似于一个自定义特性。
+         // 这个 prop 名为 videoinfo。
+         props: ['videoinfo'],
+         template: '        <div class="col-md-3">\n' +
+         '                    <div class="thumbnail">\n' +
+         '                        <img alt="300x200"\n' +
+         '                             v-bind:src="videoinfo.videoImg"/>\n' +
+         '                        <div class="caption">\n' +
+         '                            <h4 v-text="videoinfo.videoName">\n' +
+         '                                \n' +
+         '                            </h4>\n' +
+         '                            <p data-toggle="tooltip" data-placement="bottom" v-bind:title="videoinfo.videointro" v-text="videoinfo.videointro">\n' +
+         '                            </p>\n' +
+         '                            <p class="text-right">\n' +
+         '                                <a class="btn btn-primary" v-bind:href="`http://www.gaoxi.com/course.html?courseId=${videoinfo.videoUrl}`">立即学习</a>\n' +
+         '                            </p>\n' +
+         '                        </div>\n' +
+         '                    </div>\n' +
+         '                </div>'
+     })
+
+
+
+     var nowurl=window.location.href;
+     var args=nowurl.split("?")[1].split("&");
+
+     var nowPage=args[0].split("=")[1];
+     var everyPageDataNum=args[1].split("=")[1];
+     var filterOp=args[2].split("=")[1];
+
+     //1.根据url中的内容设置单选，多选框内容
+     $(".courseList").prop("checked", false);
+
+     //1~5  1~4 不选默认全选
+      var checkedArr=filterOp.split("-");
+     for(var i=0;i<checkedArr.length;i++){
+            $(".courseList").eq(checkedArr[i]-1).prop("checked",true);
+     }
+
+     //1.用户刚进来自然是 根据选项去搜结果
+     var nowListInfo=[{"videoImg":"img/chun.jpg","videoName":"入门经典","videointro":"这个视频课程十分的好看","videoUrl":"1"},
+         {"videoImg":"img/chun.jpg","videoName":"入门经典","videointro":"这个视频课程十分的好看","videoUrl":"2"},
+         {"videoImg":"img/chun.jpg","videoName":"入门经典","videointro":"这个视频课程十分的好看","videoUrl":"3"},
+         {"videoImg":"img/chun.jpg","videoName":"入门经典","videointro":"这个视频课程十分的好看","videoUrl":"4"},
+         {"videoImg":"img/chun.jpg","videoName":"入门经典","videointro":"这个视频课程十分的好看","videoUrl":"1"},
+         {"videoImg":"img/chun.jpg","videoName":"入门经典","videointro":"这个视频课程十分的好看","videoUrl":"2"},
+         {"videoImg":"img/chun.jpg","videoName":"入门经典","videointro":"这个视频课程十分的好看","videoUrl":"3"},
+         {"videoImg":"img/chun.jpg","videoName":"入门经典","videointro":"这个视频课程十分的好看","videoUrl":"4"}
+     ];
+
+    //初始化分页插件
+     $('#pageLimit').bootstrapPaginator({
+         currentPage: nowPage,//当前的请求页面。
+         totalPages: 5,//一共多少页,暂时先设置，后面ajax完会更改。
+         size:"normal",//应该是页眉的大小。
+         bootstrapMajorVersion: 3,//bootstrap的版本要求。
+         alignment:"right",
+         numberOfPages:5,//一共列出多少页选项。
+         itemTexts: function (type, page, current) {//如下的代码是将页眉显示的中文显示我们自定义的中文。
+             switch (type) {
+                 case "first": return "首页";
+                 case "prev": return "上一页";
+                 case "next": return "下一页";
+                 case "last": return "末页";
+                 case "page": return page;
+             }
+         },
+         onPageClicked: function(event, originalEvent, type, page) {
+             //用户点击翻页，此时的筛选状态没有变
+             window.location.href="http://www.gaoxi.com/courselist.html?page="+page+"&num="+everyPageDataNum+"&filterOp="+filterOp;
+         }
+     });
+
+     $.ajax({
+         url : "http://www.gaoxi.com/courses/getCourseList",
+         type : "GET",
+         data:{"page":nowPage,"size":everyPageDataNum,"filterOp":filterOp},
+         success : function(res){
+             //获取得了   count总数据条数,   本页的数据,
+             //1.计算totalPage
+             var totalPage=Math.ceil(res.data.count/everyPageDataNum);
+             //本页数据
+             nowListInfo=res.data.dataList;
+             //设置总页数
+             $('#pageLimit').bootstrapPaginator({
+                 totalPages: totalPage,//一共多少页。
+                 currentPage:nowPage //当前的页码
+             })
+         },
+         error : function(){
+             console.log('请求失败');
+         }
+     });
+
+
+     //数据渲染到页面上
+     var videoRecom=new Vue({
+         el:"#videorecommendation",
+         data:{
+             videoInfoList:nowListInfo
+         },
+         created:function(){
+         },
+         methods:{
+
+         }
+     })
+
+
+    //若是用点击了筛选按钮
+
+     $("#doFilter").click(function () {
+         //拼接过滤条件
+         var tfilterOp="";
+         for(var i=0;i<5;i++)
+         {
+             if($(".courseList").eq(i).prop("checked")){
+                 tfilterOp=tfilterOp+"-"+(i+1);
+             }
+         }
+         console.log(tfilterOp.substring(1));
+         //需要做个跳转即可
+         window.location.href="http://www.gaoxi.com/courselist.html?page="+1+"&num="+everyPageDataNum+"&filterOp="+tfilterOp.substring(1) ;
+     })
+
+
+
+
+
+
+    $(function () {
+        /*必须加上这一句不然tooltip无效果*/
+        $("[data-toggle='tooltip']").tooltip();
+    });
+</script>
+</body>
+</html>

@@ -270,8 +270,6 @@ $("#loginbtn").click(function () {
           {
               console.log("登录成功");
               $("#modal-container-912437").modal('hide');
-
-
               location.reload();
           }else{
               console.log(res.retinfo);
