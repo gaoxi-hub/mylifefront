@@ -64,10 +64,8 @@
                                              <h3 style="color: red" >{{ ccprice }}</h3>
                                         </p>
                                         <p style="height: 160px"></p>
-                                        <button type="button" style="width: 180px" class="btn btn-default  btn-success btn-lg">{{  mylearn }}</button>
+                                        <button type="button" style="width: 180px" v-on:click="addLearnList" :class="btnEnable? 'btn btn-default btn-success btn-lg ':'disabled btn btn-default btn-success btn-lg '">{{  mylearn }}</button>
                                     </div>
-
-
                         </div>
                     </div>
                 </div>
@@ -83,9 +81,6 @@
                     </div>
                 </div>
             </div>
-
-
-
             <!--视频tab-->
             <div class="tabbable" id="tabs-185254">
                 <ul class="nav nav-tabs">
@@ -106,21 +101,12 @@
         </div>
     </div>
 </div>
-
-
-
-
 <!--页面底部-->
-
 <footer class="white-wrapper">
 </footer>
-
 <!--登录注册模态框-->
 <div class="modal fade" id="modal-container-912437" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 </div>
-
-
-
 <script>
     $("#commonhead").load("head.html");
     $(".white-wrapper").load("foot.html");
@@ -148,7 +134,8 @@
                     courseType:0,
                     coursePrice:0,
                     yourState:0
-                }
+                },
+                btnEnable:false
             },
             computed:{
               //计算课程价格
@@ -162,8 +149,10 @@
                 //计算学习状态
                mylearn:function(){
                   if(this.headInfo.yourState==0){
+                      this.btnEnable=true;
                       return "加入学习";
                   }else{
+                      this.btnEnable=false;
                       return "正在学习";
                   }
                },
@@ -182,11 +171,12 @@
                     user_token="";
                 }
                 that=this;
+
                 $.ajax({
                     url : "http://www.gaoxi.com/courses/getCourseHeadInfo",
                     type : "GET",
                     data:{"courseId":courseId,"userToken":user_token},
-                  //  async: false,
+                    async: false,
                     success : function(res){
 
                         console.log(res.data);
@@ -197,7 +187,52 @@
                     }
                 });
             },
-            method:{
+            methods:{
+                addLearnList:function () {
+                    console.log("hello world")
+                    var that =this;
+                    var user_token=$.cookie("user_token");
+                    if(user_token==undefined||user_token==''){
+                        swal({
+                            title: "温馨提示",
+                            text: "您还没有登录" ,
+                            icon: "error",
+                            button:"我知道了"
+                        });
+                        return;
+                    }
+                    $.ajax({
+                        url : "http://www.gaoxi.com/courses/addToMyLearnList",
+                        type : "GET",
+                        data:{"cId":courseId,"userToken":user_token},
+                        async:false,
+                        success : function(res){
+                            if(res.retcode=='000000'){
+                                that.btnEnable=true;
+
+                                swal({
+                                    title: "温馨提示",
+                                    text: "添加成功快开始学习吧" ,
+                                    icon: "success",
+                                    button:"我知道了"
+                                }).then((value)=>{
+                                    window.location.href="http://www.gaoxi.com/course.html?courseId="+courseId;
+                                });
+                            }else {
+                                swal({
+                                    title: "温馨提示",
+                                    text: "您还没有登录" ,
+                                    icon: "error",
+                                    button:"我知道了"
+                                });
+                            }
+
+                        },
+                        error : function(){
+                            console.log('请求失败');
+                        }
+                    });
+                }
             }
         })
 
@@ -220,10 +255,6 @@
             '                                </div>\n' +
             '                            </div>'
         })
-
-
-
-
 
         //章节内容
         var chapterContent = new Vue({
@@ -314,8 +345,6 @@
             }
         })
     });
-
-
 </script>
 </body>
 </html>

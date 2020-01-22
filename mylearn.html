@@ -126,12 +126,31 @@
          '                            <p data-toggle="tooltip" data-placement="bottom" v-bind:title="videoinfo.videointro" v-text="videoinfo.videointro">\n' +
          '                            </p>\n' +
          '                            <p class="text-right">\n' +
-         '                                <a class="btn btn-primary" v-bind:href="`http://www.gaoxi.com/course.html?courseId=${videoinfo.videoUrl}`">立即学习</a>\n' +
+         '                            <a class="btn btn-danger" href="javascript:void(0)" v-bind:onclick="`doDelete(${videoinfo.videoUrl})`">退出课程</a>\n'+
+         '                                <a class="btn btn-primary" v-bind:href="`http://www.gaoxi.com/course.html?courseId=${videoinfo.videoUrl}`">继续学习</a>\n' +
          '                            </p>\n' +
          '                        </div>\n' +
          '                    </div>\n' +
          '                </div>'
      })
+
+
+     var user_token=$.cookie("user_token");
+     if(user_token==undefined||user_token==""){
+         swal({
+             title: "温馨提示",
+             text: "您还没有登录,5s后自动跳转主页" ,
+             icon: "error",
+             button:"立即返回"
+         }).then((value) =>{
+             if(value){
+                 window.location.href="http://www.gaoxi.com/index.html";
+             }
+         });
+
+         setTimeout(function(){window.location.href="http://www.gaoxi.com/index.html"},5000)
+
+     }
 
 
 
@@ -178,20 +197,52 @@
      });
 
      $.ajax({
-         url : "http://www.gaoxi.com/courses/getCourseList",
+         url : "http://www.gaoxi.com/courses/getLearnCourseList",
          type : "GET",
-         data:{"page":nowPage,"size":everyPageDataNum},
+         data:{"page":nowPage,"size":everyPageDataNum,"userToken":user_token},
+         async:false,
          success : function(res){
-             //获取得了   count总数据条数,   本页的数据,
-             //1.计算totalPage
-             var totalPage=Math.ceil(res.data.count/everyPageDataNum);
-             //本页数据
-             nowListInfo=res.data.dataList;
-             //设置总页数
-             $('#pageLimit').bootstrapPaginator({
-                 totalPages: totalPage,//一共多少页。
-                 currentPage:nowPage //当前的页码
-             })
+
+             if(res.retcode=='000000')
+             {
+                 if(res.data.count==0){
+                     swal({
+                         title: "温馨提示",
+                         text: "您还没有学习任何课程" ,
+                         icon: "error",
+                         button:"去寻找课程"
+                     }).then((value) =>{
+                         if(value){
+                             window.location.href="http://www.gaoxi.com/courselist.html?page=1&num=12&filterOp=1-2-3-4-5";
+                         }
+                     });
+                 }
+
+
+                 //获取得了   count总数据条数,   本页的数据,
+                 //1.计算totalPage
+                 var totalPage=Math.ceil(res.data.count/everyPageDataNum);
+                 //本页数据
+                 nowListInfo=res.data.dataList;
+                 //设置总页数
+                 $('#pageLimit').bootstrapPaginator({
+                     totalPages: totalPage,//一共多少页。
+                     currentPage:nowPage //当前的页码
+                 })
+             }else{
+                 //返回主页
+                 swal({
+                     title: "温馨提示",
+                     text: "您还没有登录,5s后自动跳转主页" ,
+                     icon: "error",
+                     button:"立即返回"
+                 }).then((value) =>{
+                     if(value){
+                         window.location.href="http://www.gaoxi.com/index.html";
+                     }
+                 });
+                 setTimeout(function(){window.location.href="http://www.gaoxi.com/index.html"},5000)
+             }
          },
          error : function(){
              console.log('请求失败');
@@ -212,6 +263,52 @@
          }
      })
 
+
+     //删除学习课程
+     function doDelete(videoId){
+         console.log(videoId);
+
+         if(user_token==undefined||user_token==''){
+             alert("用户登录身份过期");
+             window.location.href="http://www.gaoxi.com/index.html";
+             //user_token="";
+         }
+         $.ajax({
+             url : "http://www.gaoxi.com/courses/deleteCourse",
+             type : "GET",
+             data:{"vId":videoId,"userToken":user_token},
+             success : function(res){
+                 if(res.retcode='000000'){
+                     swal({
+                         title: "温馨提示",
+                         text: "删除成功" ,
+                         icon: "success",
+                         button:"确认"
+                     }).then((value) =>{
+                         if(value){
+                             window.location.href="http://www.gaoxi.com/mylearn.html?page="+nowPage+"&num="+everyPageDataNum;
+                         }
+                     });
+                 }else{
+                     swal({
+                         title: "温馨提示",
+                         text: "您还没有登录,5s后自动跳转主页" ,
+                         icon: "error",
+                         button:"立即返回"
+                     }).then((value) =>{
+                         if(value){
+                             window.location.href="http://www.gaoxi.com/index.html";
+                         }
+                     });
+
+                 }
+
+             },
+             error : function(){
+                 console.log('请求失败');
+             }
+         });
+     }
     $(function () {
         /*必须加上这一句不然tooltip无效果*/
         $("[data-toggle='tooltip']").tooltip();

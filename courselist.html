@@ -14,15 +14,15 @@
     <link rel="stylesheet" href="./css/checkboxs/default.css">
 
     <style>
-        #carousel-345272 img {
-            width: 100%;
-            height: 450px;
-        }
-
         .thumbnail p {
             white-space: nowrap;
             text-overflow: ellipsis;
             overflow: hidden;
+        }
+
+        .thumbnail img{
+            height:125px;
+            width:222px;
         }
     </style>
 
@@ -45,7 +45,7 @@
         <div class="col-md-12 column">
             <ul class="breadcrumb">
                 <li >
-                    <a href="#">主页</a>
+                    <a href="index.html">主页</a>
                 </li>
                 <li class="active">
                     学习视频
@@ -108,7 +108,7 @@
     <!--视频推荐-->
     <div class="row clearfix">
         <div class="col-md-12 column">
-            <div class="row" id="videorecommendation">
+            <div class="row" id="videoCourseList">
                 <video-item
                         v-for="item in videoInfoList"
                         v-bind:videoinfo="item">
@@ -122,18 +122,12 @@
 <div class="container">
     <div class="row clearfix">
         <div class="col-md-offset-7 col-md-5 column">
-            <ul id="pageLimit">
+            <ul id="pageLimit" style="cursor: pointer">
 
             </ul>
         </div>
     </div>
 </div>
-
-
-
-
-
-
 
 <footer class="white-wrapper"></footer>
 <!--登录注册模态框-->
@@ -150,7 +144,7 @@
          props: ['videoinfo'],
          template: '        <div class="col-md-3">\n' +
          '                    <div class="thumbnail">\n' +
-         '                        <img alt="300x200"\n' +
+         '                        <img alt="300x200" \n'  +
          '                             v-bind:src="videoinfo.videoImg"/>\n' +
          '                        <div class="caption">\n' +
          '                            <h4 v-text="videoinfo.videoName">\n' +
@@ -179,10 +173,15 @@
      $(".courseList").prop("checked", false);
 
      //1~5  1~4 不选默认全选
-      var checkedArr=filterOp.split("-");
-     for(var i=0;i<checkedArr.length;i++){
-            $(".courseList").eq(checkedArr[i]-1).prop("checked",true);
+     if(filterOp!=undefined&&filterOp!=''){
+         var checkedArr=filterOp.split("-");
+         //alert(checkedArr);
+         for(var i=0;i<checkedArr.length;i++){
+             $(".courseList").eq(checkedArr[i]-1).prop("checked",true);
+         }
      }
+
+
 
      //1.用户刚进来自然是 根据选项去搜结果
      var nowListInfo=[{"videoImg":"img/chun.jpg","videoName":"入门经典","videointro":"这个视频课程十分的好看","videoUrl":"1"},
@@ -222,6 +221,7 @@
          url : "http://www.gaoxi.com/courses/getCourseList",
          type : "GET",
          data:{"page":nowPage,"size":everyPageDataNum,"filterOp":filterOp},
+         async:false,
          success : function(res){
              //获取得了   count总数据条数,   本页的数据,
              //1.计算totalPage
@@ -241,8 +241,8 @@
 
 
      //数据渲染到页面上
-     var videoRecom=new Vue({
-         el:"#videorecommendation",
+     var videoCourseList=new Vue({
+         el:"#videoCourseList",
          data:{
              videoInfoList:nowListInfo
          },
@@ -265,16 +265,14 @@
                  tfilterOp=tfilterOp+"-"+(i+1);
              }
          }
-         console.log(tfilterOp.substring(1));
+         var resultOp="";
+         if(tfilterOp!=""){
+             //alert("筛选项"+tfilterOp.substring(1));
+             resultOp=tfilterOp.substring(1);
+         }
          //需要做个跳转即可
-         window.location.href="http://www.gaoxi.com/courselist.html?page="+1+"&num="+everyPageDataNum+"&filterOp="+tfilterOp.substring(1) ;
+         window.location.href="http://www.gaoxi.com/courselist.html?page="+1+"&num="+everyPageDataNum+"&filterOp="+resultOp;
      })
-
-
-
-
-
-
     $(function () {
         /*必须加上这一句不然tooltip无效果*/
         $("[data-toggle='tooltip']").tooltip();
