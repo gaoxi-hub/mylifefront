@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>徐州工程学院思政课学习管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="css/common.css">
+    <!--验证码css-->
+    <link rel="stylesheet" href="css/verify.css">
+    <!--checkbox-->
+    <link rel="stylesheet" href="./css/checkboxs/Font-Awesome/css/font-awesome.css">
+    <link rel="stylesheet" href="./css/checkboxs/build.css">
+    <link rel="stylesheet" href="./css/checkboxs/default.css">
+    <!--jqeury评分条-->
+    <!--<link rel="stylesheet" href="./css/star1/default.css">-->
+    <link rel="stylesheet" href="./css/star1/normalize.css">
+   <!-- <link rel="stylesheet" href="./css/star1/demo.css">-->
+
+
+
+
+
+
+
+
+
+
+    <!--vue.js-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/jquery.cookie.js"></script>
+    <script src="js/jquery.timers.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="js/echarts.js"></script>
+
+    <style>
+
+    </style>
+
+
+</head>
+<body>
+<div class="navbar navbar-inverse" id="commonhead"></div>
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <ul class="breadcrumb">
+                <li >
+                    <a href="http://www.gaoxi.com/index.html">主页</a>
+                </li>
+                <li class="active">
+                    题目练习
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--题目练习模块-->
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="panel panel-success" id="timupanel">
+                <div class="panel-heading">
+                    <h3 class="panel-title" style="line-height: 2em;" v-show="sShow">
+                        <span class="label label-primary">单选题</span>&nbsp;&nbsp;{{nowIndex+1}}/{{totalNum}}&nbsp;{{subjectinfo.tstem}}
+                    </h3>
+                    <h3 class="panel-title" style="line-height: 2em;" v-show="mShow">
+                        <span class="label label-warning">多选题</span>&nbsp;&nbsp;{{nowIndex+1}}/{{totalNum}}&nbsp;{{subjectinfo.tstem}}
+                    </h3>
+                    <h3 class="panel-title" style="line-height: 2em;" v-show="jShow">
+                        <span class="label label-danger">判断题</span>&nbsp;&nbsp;{{nowIndex+1}}/{{totalNum}}&nbsp;{{subjectinfo.tstem}}
+                    </h3>
+                </div>
+                <div class="panel-body" style="height: 250px">
+                    <!--单选题-->
+                    <div id="singleOp" v-show="sShow">
+                        <div class="checkbox checkbox-info checkbox-circle">
+                            <input type="radio" name="sradio" id="radioA" value="option1">
+                            <label for="radioA">
+                                A.{{subjectinfo.tOptionA}}
+                            </label>
+                        </div>
+                        <div class="checkbox checkbox-info checkbox-circle">
+                            <input type="radio" name="sradio" id="radioB" value="option2">
+                            <label for="radioB">
+                                B.{{subjectinfo.tOptionB}}
+                            </label>
+                        </div>
+                        <div class="checkbox checkbox-info checkbox-circle">
+                            <input type="radio" name="sradio" id="radioC" value="option1">
+                            <label for="radioC">
+                                 C.{{subjectinfo.tOptionC}}
+                            </label>
+                        </div>
+                        <div class="checkbox checkbox-info checkbox-circle">
+                            <input type="radio" name="sradio" id="radioD" value="option2">
+                            <label for="radioD">
+                                D.{{subjectinfo.tOptionD}}
+                            </label>
+                        </div>
+                    </div>
+                    <!--多选题-->
+                    <div id="multipleOp" v-show="mShow">
+                        <div class="checkbox checkbox-info">
+                            <input id="m_optionA" class="styled" type="checkbox">
+                            <label for="m_optionA">
+                                A.{{subjectinfo.tOptionA}}
+                            </label>
+                        </div>
+                        <div class="checkbox checkbox-info">
+                            <input id="m_optionB" class="styled" type="checkbox">
+                            <label for="m_optionB">
+                                B.{{subjectinfo.tOptionB}}
+                            </label>
+                        </div>
+                        <div class="checkbox checkbox-info">
+                            <input id="m_optionC" class="styled" type="checkbox">
+                            <label for="m_optionC">
+                                C.{{subjectinfo.tOptionC}}
+                            </label>
+                        </div>
+                        <div class="checkbox checkbox-info">
+                            <input id="m_optionD" class="styled" type="checkbox">
+                            <label for="m_optionD">
+                                D.{{subjectinfo.tOptionD}}
+                            </label>
+                        </div>
+                        <div class="checkbox checkbox-info">
+                            <input id="m_optionE" class="styled" type="checkbox">
+                            <label for="m_optionE">
+                                E.{{subjectinfo.tOptionE}}
+                            </label>
+                        </div>
+                        <div>
+                                <button class="btn btn-info">确认</button>
+                        </div>
+                    </div>
+                    <!--判断题-->
+                    <div id="judgeOp" v-show="jShow">
+                        <div class="checkbox checkbox-info checkbox-circle">
+                            <input type="radio" name="jradio" id="jradioA" value="option1">
+                            <label for="jradioA">
+                                对
+                            </label>
+                        </div>
+                        <div class="checkbox checkbox-info checkbox-circle">
+                            <input type="radio" name="jradio" id="jradioB" value="option2">
+                            <label for="jradioB">
+                                错
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="row clearfix">
+                        <!-- -->
+                        <div class="col-md-6">
+                            <button class="btn btn-info" @click="preT">上一题</button>
+                            <button class="btn btn-info" @click="nextT">下一题</button>
+                        </div>
+                        <!-- -->
+                        <div class="col-md-6">
+                            <button class="btn btn-success ">显示解析</button>
+                            <button class="btn btn-success" @click="showTnum" >{{ isShowTnum? '关闭答题卡':'显示答题卡'}}</button>
+                        </div>
+                        <div class="col-md-12" v-show="isShowTnum">
+                            <ul class="pagination">
+                                <li v-for="(item,index) in alltid" >
+                                    <!--在click中应用vue中遍历的对象时只需要直接引用-->
+                                    <a  @click="selectSub(index)"  href="javascript:void(0)" style="cursor: pointer; " class="tnum" >{{ index+1 }}</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="container">
+                        <div class="row clearfix">
+                        <div class="col-md-12" >
+                            <!-- 左对齐 -->
+                            <div class="media">
+                                <div class="media-left">
+                                    <img src="https://static.runoob.com/images/mix/img_avatar.png" class="media-object" style="width:60px">
+                                </div>
+                                <div class="media-body">
+                                    <h4 class="media-heading">题目解析</h4>
+                                    <p id="demo9">难度:<span class="ratyli" :data-rate="subjectinfo.tLevel"></span></p>
+                                    <p>这是一些示例文本。这是一些示例文本。这是一些示例文本。这是一些示例文本。这是一些示例文本。这是一些示例文本。这是一些示例文本。这是一些示例文本。</p>
+                                </div>
+                            </div>
+
+                        </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<footer class="white-wrapper"></footer>
+<!--登录注册模态框-->
+<div class="modal fade" id="modal-container-912437" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+</div>
+<script src="js/jquery.ratyli.min.js"></script>
+<script>
+     $("#commonhead").load("head.html");
+     $(".white-wrapper").load("foot.html");
+     $("#modal-container-912437").load("login.html");
+     var nowUrl=window.location.href;
+     // 课程号,1:马原 2:思修
+     var  ctype=nowUrl.split("?")[1].split("&")[0].split("=")[1];
+     console.log(ctype);
+     //练习模式
+     var pattern=nowUrl.split("?")[1].split("&")[1].split("=")[1];
+    console.log(pattern);
+     //若是章节练习
+     var chapter=0;
+     var ttype=0;
+     if(pattern==3)
+     {
+         //章节号
+         chapter=nowUrl.split("?")[1].split("&")[2].split("=")[1];
+         console.log(chapter);
+         //题目类型
+         ttype=nowUrl.split("?")[1].split("&")[3].split("=")[1];
+         console.log(ttype);
+     }
+     if(pattern==4){
+         //题目类型
+         ttype=nowUrl.split("?")[1].split("&")[2].split("=")[1];
+         console.log(ttype);
+     }
+     var user_token=$.cookie("user_token");
+     if(user_token==undefined||user_token==''){
+         user_token='';
+     }
+
+     //当前: "#00FFFF",#00FF00,"#FF0000"
+     var nowTColor="";
+
+     //用户刚进入页面,查询此类题的数量以及其 库中编号
+     var timupanel = new Vue({
+         el:"#timupanel",
+         data:{
+             totalNum:10,
+             alltid:["1","2","323","4","5","8","29","33","33","33"],
+             sShow:true,
+             mShow:false,
+             jShow:false,
+             nowIndex:0,
+             isShowTnum:true,
+             subjectinfo:{
+                 tstem:"初始化题干",
+                 tOptionA:"选项A",
+                 tOptionB:"选项B",
+                 tOptionC:"选项C",
+                 tOptionD:"选项D",
+                 tOptionE:"选项E",
+                 tType:"S",
+                 tLevel:2,
+                 tAnalysis:"hello world di zhe tou jieshou suoyuo de chaofen"
+             }
+         },
+         methods:{
+             //答题卡开启关闭
+             showTnum:function(){
+               this.isShowTnum=!this.isShowTnum;
+             },
+             selectSub:function (tindex){
+                console.log(tindex);
+                 //改变颜色
+                 changeTnumStatus(this.nowIndex,tindex);
+                 this.nowIndex=tindex;
+
+             },
+             preT:function () {
+                 if(this.nowIndex==0){
+                     swal({
+                         title: "温馨提示",
+                         text: "已经是第一题了哟" ,
+                         icon: "error",
+                         button:"我知道了"
+                     })
+                     return;
+                 }
+                 //改变颜色
+                 changeTnumStatus(this.nowIndex,--this.nowIndex);
+
+
+                 //ajax 请求题目内容。。。
+
+                 this.jShow=false;
+                 this.mShow=true;
+                 this.sShow=false;
+
+             },
+             nextT:function () {
+                 if(this.nowIndex==this.totalNum-1){
+                     swal({
+                         title: "温馨提示",
+                         text: "已经是最后一题了哟" ,
+                         icon: "error",
+                         button:"我知道了"
+                     })
+                     return;
+                 }
+                 //改变颜色
+                 changeTnumStatus(this.nowIndex,++this.nowIndex);
+
+
+
+
+                 //ajax 请求题目内容。。。
+
+                 this.jShow=true;
+                 this.mShow=false;
+                 this.sShow=false;
+
+
+
+
+
+             }
+         },
+         created:function(){
+           //查询所有的题号
+      /*       if(pattern!=3&pattern!=4){
+                 that=this;
+                 $.ajax({
+                     url : "http://www.gaoxi.com/courses/getSubjectId",
+                     type : "GET",
+                     data:{"cType":ctype,"pattern":pattern,"userToken":user_token},
+                    // async:false,
+                     success : function(res){
+                         that.alltid=res.data.alltid;
+                         that.subjectinfo=res.data.subjectInfo;
+                     },
+                     error : function(){
+                         console.log('请求失败');
+                     }
+                 });
+             }*/
+         }
+
+
+     })
+
+     document.getElementsByClassName('tnum')[0].style.backgroundColor="#00FFFF";
+
+
+     //添加题号的active
+     function changeTnumStatus(nowi,willi){
+         console.log(nowi+"  "+willi );
+
+         document.getElementsByClassName('tnum')[nowi].style.backgroundColor = nowTColor;
+
+         //记录将要成为当前的原始颜色
+        nowTColor=document.getElementsByClassName('tnum')[willi].style.backgroundColor;
+
+        //我们将将要成为 当前选中的题目的背景色变为
+         document.getElementsByClassName('tnum')[willi].style.backgroundColor="#00FFFF";
+     }
+
+
+
+
+     $(function () {
+         // Disabled评分条
+         $("#demo9 .ratyli").ratyli({disable:true});
+
+
+
+
+
+
+
+
+     })
+
+
+</script>
+</body>
+</html>
