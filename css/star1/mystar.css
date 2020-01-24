@@ -1,0 +1,11 @@
+/* all sign style */
+.ratyli .rate{color: #ccc; font-size: 24px;}
+
+/* empty sign style */
+.ratyli .rate-empty{color: #666;}
+
+/* full sign style after rating*/
+.ratyli .rate-full{color: gold;}
+
+/* active signs (hover)*/
+.ratyli .rate-active{color: #a94039;}

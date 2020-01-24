@@ -16,16 +16,8 @@
     <!--jqeury评分条-->
     <!--<link rel="stylesheet" href="./css/star1/default.css">-->
     <link rel="stylesheet" href="./css/star1/normalize.css">
-   <!-- <link rel="stylesheet" href="./css/star1/demo.css">-->
-
-
-
-
-
-
-
-
-
+    <!-- <link rel="stylesheet" href="./css/star1/demo.css">-->
+    <link rel="stylesheet" href="css/star1/mystar.css">
 
     <!--vue.js-->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -37,7 +29,16 @@
     <script src="js/echarts.js"></script>
 
     <style>
-
+        .tnum{
+            color: black;
+            float: left;
+            width: 40px;
+            height: 30px;
+            text-align: center;
+            text-decoration: none;
+            background-color: #fff;
+            border: 1px solid #ddd;
+        }
     </style>
 
 
@@ -48,7 +49,7 @@
     <div class="row clearfix">
         <div class="col-md-12 column">
             <ul class="breadcrumb">
-                <li >
+                <li>
                     <a href="http://www.gaoxi.com/index.html">主页</a>
                 </li>
                 <li class="active">
@@ -64,7 +65,7 @@
     <div class="row clearfix">
         <div class="col-md-12 column">
             <div class="panel panel-success" id="timupanel">
-                <div class="panel-heading">
+                <div class="panel-heading" style="height: 100px">
                     <h3 class="panel-title" style="line-height: 2em;" v-show="sShow">
                         <span class="label label-primary">单选题</span>&nbsp;&nbsp;{{nowIndex+1}}/{{totalNum}}&nbsp;{{subjectinfo.tstem}}
                     </h3>
@@ -75,80 +76,80 @@
                         <span class="label label-danger">判断题</span>&nbsp;&nbsp;{{nowIndex+1}}/{{totalNum}}&nbsp;{{subjectinfo.tstem}}
                     </h3>
                 </div>
-                <div class="panel-body" style="height: 250px">
+                <div class="panel-body" style="height: 250px" id="optionContent">
                     <!--单选题-->
                     <div id="singleOp" v-show="sShow">
-                        <div class="checkbox checkbox-info checkbox-circle">
-                            <input type="radio" name="sradio" id="radioA" value="option1">
+                        <div class="checkbox checkbox-info checkbox-circle" @click="doSCheck('#radioA')">
+                            <input type="radio" name="sradio" id="radioA" value="A">
                             <label for="radioA">
-                                A.{{subjectinfo.tOptionA}}
+                                A.{{subjectinfo.toptionA}}
                             </label>
                         </div>
-                        <div class="checkbox checkbox-info checkbox-circle">
-                            <input type="radio" name="sradio" id="radioB" value="option2">
+                        <div class="checkbox checkbox-info checkbox-circle" @click="doSCheck('#radioB')">
+                            <input type="radio" name="sradio" id="radioB" value="B">
                             <label for="radioB">
-                                B.{{subjectinfo.tOptionB}}
+                                B.{{subjectinfo.toptionB}}
                             </label>
                         </div>
-                        <div class="checkbox checkbox-info checkbox-circle">
-                            <input type="radio" name="sradio" id="radioC" value="option1">
+                        <div class="checkbox checkbox-info checkbox-circle" @click="doSCheck('#radioC')">
+                            <input type="radio" name="sradio" id="radioC" value="C">
                             <label for="radioC">
-                                 C.{{subjectinfo.tOptionC}}
+                                C.{{subjectinfo.toptionC}}
                             </label>
                         </div>
-                        <div class="checkbox checkbox-info checkbox-circle">
-                            <input type="radio" name="sradio" id="radioD" value="option2">
+                        <div class="checkbox checkbox-info checkbox-circle" @click="doSCheck('#radioD')">
+                            <input type="radio" name="sradio" id="radioD" value="D">
                             <label for="radioD">
-                                D.{{subjectinfo.tOptionD}}
+                                D.{{subjectinfo.toptionD}}
                             </label>
                         </div>
                     </div>
                     <!--多选题-->
                     <div id="multipleOp" v-show="mShow">
                         <div class="checkbox checkbox-info">
-                            <input id="m_optionA" class="styled" type="checkbox">
+                            <input id="m_optionA" class="styled" type="checkbox" value="A">
                             <label for="m_optionA">
-                                A.{{subjectinfo.tOptionA}}
+                                A.{{subjectinfo.toptionA}}
                             </label>
                         </div>
                         <div class="checkbox checkbox-info">
-                            <input id="m_optionB" class="styled" type="checkbox">
+                            <input id="m_optionB" class="styled" type="checkbox" value="B">
                             <label for="m_optionB">
-                                B.{{subjectinfo.tOptionB}}
+                                B.{{subjectinfo.toptionB}}
                             </label>
                         </div>
                         <div class="checkbox checkbox-info">
-                            <input id="m_optionC" class="styled" type="checkbox">
+                            <input id="m_optionC" class="styled" type="checkbox" value="C">
                             <label for="m_optionC">
-                                C.{{subjectinfo.tOptionC}}
+                                C.{{subjectinfo.toptionC}}
                             </label>
                         </div>
                         <div class="checkbox checkbox-info">
-                            <input id="m_optionD" class="styled" type="checkbox">
+                            <input id="m_optionD" class="styled" type="checkbox" value="D">
                             <label for="m_optionD">
-                                D.{{subjectinfo.tOptionD}}
+                                D.{{subjectinfo.toptionD}}
                             </label>
                         </div>
                         <div class="checkbox checkbox-info">
-                            <input id="m_optionE" class="styled" type="checkbox">
+                            <input id="m_optionE" class="styled" type="checkbox" value="E">
                             <label for="m_optionE">
-                                E.{{subjectinfo.tOptionE}}
+                                E.{{subjectinfo.toptionE}}
                             </label>
                         </div>
                         <div>
-                                <button class="btn btn-info">确认</button>
+                            <button class="btn btn-info" @click="doMCheck">确认</button>
                         </div>
                     </div>
                     <!--判断题-->
                     <div id="judgeOp" v-show="jShow">
-                        <div class="checkbox checkbox-info checkbox-circle">
-                            <input type="radio" name="jradio" id="jradioA" value="option1">
+                        <div class="checkbox checkbox-info checkbox-circle" @click="doSCheck('#jradioA')">
+                            <input type="radio" name="jradio" id="jradioA" value="A">
                             <label for="jradioA">
                                 对
                             </label>
                         </div>
-                        <div class="checkbox checkbox-info checkbox-circle">
-                            <input type="radio" name="jradio" id="jradioB" value="option2">
+                        <div class="checkbox checkbox-info checkbox-circle" @click="doSCheck('#jradioB')">
+                            <input type="radio" name="jradio" id="jradioB" value="B" >
                             <label for="jradioB">
                                 错
                             </label>
@@ -164,42 +165,52 @@
                         </div>
                         <!-- -->
                         <div class="col-md-6">
-                            <button class="btn btn-success ">显示解析</button>
-                            <button class="btn btn-success" @click="showTnum" >{{ isShowTnum? '关闭答题卡':'显示答题卡'}}</button>
+                            <button class="btn btn-success" @click="showAna">{{ isShowAna? '关闭题目解析':'显示题目解析'}}</button>
+                            <button class="btn btn-success" @click="showTnum">{{ isShowTnum? '关闭答题卡':'显示答题卡'}}</button>
                         </div>
-                        <div class="col-md-12" v-show="isShowTnum">
-                            <ul class="pagination">
-                                <li v-for="(item,index) in alltid" >
+                    </div>
+                        <!---->
+                                <div style="height: 20px"></div>
+                        <!--答题卡-->
+                        <div class="container" >
+                            <div class="row clearfix">
+                        <div class="col-md-12"  v-show="isShowTnum">
+                            <ul style="list-style: none;overflow: hidden; padding-left: 0px ;margin-left: -18px;" >
+                                <li v-for="(item,index) in alltid" class="tli">
                                     <!--在click中应用vue中遍历的对象时只需要直接引用-->
-                                    <a  @click="selectSub(index)"  href="javascript:void(0)" style="cursor: pointer; " class="tnum" >{{ index+1 }}</a>
+                                    <a @click="selectSub(index)" href="javascript:void(0)" style="cursor: pointer; "
+                                       class="tnum">{{ index+1 }}</a>
                                 </li>
                             </ul>
                         </div>
+                            </div>
+                        </div>
+                    <!--题目解析-->
                         <div class="container">
-                        <div class="row clearfix">
-                        <div class="col-md-12" >
-                            <!-- 左对齐 -->
-                            <div class="media">
-                                <div class="media-left">
-                                    <img src="https://static.runoob.com/images/mix/img_avatar.png" class="media-object" style="width:60px">
-                                </div>
-                                <div class="media-body">
-                                    <h4 class="media-heading">题目解析</h4>
-                                    <p id="demo9">难度:<span class="ratyli" :data-rate="subjectinfo.tLevel"></span></p>
-                                    <p>这是一些示例文本。这是一些示例文本。这是一些示例文本。这是一些示例文本。这是一些示例文本。这是一些示例文本。这是一些示例文本。这是一些示例文本。</p>
+                            <div class="row clearfix">
+                                <div class="col-md-12" v-show="isShowAna">
+                                    <!-- 左对齐 -->
+                                    <div class="media">
+                                        <div class="media-left">
+                                            <img src="https://static.runoob.com/images/mix/img_avatar.png"
+                                                 class="media-object" style="width:60px">
+                                        </div>
+                                        <div class="media-body">
+                                            <h4 class="media-heading">题目解析</h4>
+                                            <p id="demo9">难度:<span class="ratyli" :data-rate="subjectinfo.tlevel"></span></p>
+                                            <p>{{subjectinfo.tanalysis}}</p>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
+                        </div>
 
-                        </div>
-                        </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 
 
 <footer class="white-wrapper"></footer>
@@ -208,181 +219,336 @@
 </div>
 <script src="js/jquery.ratyli.min.js"></script>
 <script>
-     $("#commonhead").load("head.html");
-     $(".white-wrapper").load("foot.html");
-     $("#modal-container-912437").load("login.html");
-     var nowUrl=window.location.href;
-     // 课程号,1:马原 2:思修
-     var  ctype=nowUrl.split("?")[1].split("&")[0].split("=")[1];
-     console.log(ctype);
-     //练习模式
-     var pattern=nowUrl.split("?")[1].split("&")[1].split("=")[1];
+
+    //****页面的头尾和登录窗****
+    $("#commonhead").load("head.html");
+    $(".white-wrapper").load("foot.html");
+    $("#modal-container-912437").load("login.html");
+
+    //***主要是当前选择答题模式的一些参数获取
+    var nowUrl = window.location.href;
+    // 课程号,1:马原 2:思修
+    var ctype = nowUrl.split("?")[1].split("&")[0].split("=")[1];
+    console.log(ctype);
+    //练习模式
+    var pattern = nowUrl.split("?")[1].split("&")[1].split("=")[1];
     console.log(pattern);
-     //若是章节练习
-     var chapter=0;
-     var ttype=0;
-     if(pattern==3)
-     {
-         //章节号
-         chapter=nowUrl.split("?")[1].split("&")[2].split("=")[1];
-         console.log(chapter);
-         //题目类型
-         ttype=nowUrl.split("?")[1].split("&")[3].split("=")[1];
-         console.log(ttype);
-     }
-     if(pattern==4){
-         //题目类型
-         ttype=nowUrl.split("?")[1].split("&")[2].split("=")[1];
-         console.log(ttype);
-     }
-     var user_token=$.cookie("user_token");
-     if(user_token==undefined||user_token==''){
-         user_token='';
-     }
+    //若是章节练习
+    var chapter = 0;
+    var ttype = 0;
+    if (pattern == 3) {
+        //章节号
+        chapter = nowUrl.split("?")[1].split("&")[2].split("=")[1];
+        console.log(chapter);
+        //题目类型
+        ttype = nowUrl.split("?")[1].split("&")[3].split("=")[1];
+        console.log(ttype);
+    }
+    if (pattern == 4) {
+        //题目类型
+        ttype = nowUrl.split("?")[1].split("&")[2].split("=")[1];
+        console.log(ttype);
+    }
 
-     //当前: "#00FFFF",#00FF00,"#FF0000"
-     var nowTColor="";
+    //***** 用户信息**********
+    var user_token = $.cookie("user_token");
+    if (user_token == undefined || user_token == '') {
+        user_token = '';
+    }
 
-     //用户刚进入页面,查询此类题的数量以及其 库中编号
-     var timupanel = new Vue({
-         el:"#timupanel",
-         data:{
-             totalNum:10,
-             alltid:["1","2","323","4","5","8","29","33","33","33"],
-             sShow:true,
-             mShow:false,
-             jShow:false,
-             nowIndex:0,
-             isShowTnum:true,
-             subjectinfo:{
-                 tstem:"初始化题干",
-                 tOptionA:"选项A",
-                 tOptionB:"选项B",
-                 tOptionC:"选项C",
-                 tOptionD:"选项D",
-                 tOptionE:"选项E",
-                 tType:"S",
-                 tLevel:2,
-                 tAnalysis:"hello world di zhe tou jieshou suoyuo de chaofen"
-             }
-         },
-         methods:{
-             //答题卡开启关闭
-             showTnum:function(){
-               this.isShowTnum=!this.isShowTnum;
-             },
-             selectSub:function (tindex){
+
+    //当前所在题目,答题卡号的颜色值记录  "#00FFFF",#00FF00,"#FF0000"
+    var nowTColor = "";
+
+    //用户刚进入页面,查询此类题的数量以及其 库中编号
+    var timupanel = new Vue({
+        el: "#timupanel",
+        data: {
+            totalNum: 10,
+            alltid: ["1", "2", "323", "4", "5", "8", "29", "33", "33", "33"],
+            sShow: true,
+            mShow: false,
+            jShow: false,
+            nowIndex: 0,
+            isShowTnum: true,
+            isShowAna:true,
+            subjectinfo: {
+                tstem: "初始化题干",
+                toptionA: "选项A",
+                toptionB: "选项B",
+                toptionC: "选项C",
+                toptionD: "选项D",
+                toptionE: "选项E",
+                toype: "S",
+                tlevel: 2,
+                tanalysis: "hello world di zhe tou jieshou suoyuo de chaofen"
+            }
+        },
+        methods: {
+            //多选题答题按钮点击
+            doMCheck:function () {
+                //若是已经作答过的题目禁止点击事件
+                if($("#multipleOp").find("input").prop("disabled"))
+                {
+                    return ;
+                }
+                //********* 获取当前用户选择的答案
+               var $checkedInputs=$("#multipleOp").find("input:checked");
+               var mans="";
+               console.log($checkedInputs)
+                for(var i=0;i<$checkedInputs.length;i++)
+                {
+                    mans=mans+$checkedInputs.eq(i).val();
+                }
+                //若答案为空退出
+                if(mans==""){
+                   return
+                }else{
+                   console.log(mans);
+                   //获取真实的答案
+                    var trueAns=getTrueAns(this.alltid[this.nowIndex],mans);
+                    console.log(trueAns);
+                    //更改题号颜色,也就是说当前题 是错还是对， 会在题号上留下标记
+                    changeTnumColor(mans,trueAns,this.nowIndex);
+                    //所有的选择按钮  都变成danger 和 禁用
+                    allToDanger();
+                    //正确答案的呈现,正确答案的选项按钮成 info 并 checked
+                    for(var i=0;i<trueAns.length;i++){
+                        $("#m_option"+trueAns.charAt(i)).parent().removeClass("checkbox-danger")
+                            .addClass("checkbox-info");
+                        $("#m_option"+trueAns.charAt(i)).prop("checked",true);
+                    }
+                }
+            },
+            //做单项选择题监听
+            doSCheck:function (e){
+                //若已经选择了，答案也出来了，就不能再点击了
+                if($("#singleOp").find("input").attr("type")=="checkbox"){
+                    return;
+                }
+                if($("#judgeOp").find("input").attr("type")=="checkbox"){
+                    return;
+                }
+                //当前选择对象
+               var $hasOpted=$(e);
+                //若是选中的
+               if($hasOpted.prop('checked')){
+                   console.log($hasOpted.val());
+                   //后台验证,获取真实答案
+                   var trueAns=getTrueAns(this.alltid[this.nowIndex],$hasOpted.val());
+                   //console.log(trueAns);
+                   //改变当前的题号颜色
+                   changeTnumColor($hasOpted.val(),trueAns,this.nowIndex);
+
+                   //将正确答案的那个input 变为 checked
+                   //有可能是单选也有可能是判断无所谓都弄上
+
+                  //将所有的选项添加 checkbox-danger
+                   //所有按钮禁用
+                   allToDanger();
+                   //呈现多选按钮
+                   $("#singleOp").find("input").attr("type","checkbox");
+                   $("#judgeOp").find("input").attr("type","checkbox");
+
+                   //正确答案的呈现完毕, 正确的答案项  info  checked
+                   $("#jradio"+trueAns).parent().removeClass("checkbox-danger");
+                   $("#radio"+trueAns).parent().removeClass("checkbox-danger");
+                   $("#radio"+trueAns).parent().addClass("checkbox-info");
+                   $("#jradio"+trueAns).parent().addClass("checkbox-info");
+                   $("#radio"+trueAns).prop("checked",true);
+                   $("#jradio"+trueAns).prop("checked",true);
+                   //自动下一题
+               }else {
+                   // 虽然有点击事件,但是不是选的
+                   return;
+               }
+            },
+            //答题卡开启关闭
+            showTnum: function () {
+                this.isShowTnum = !this.isShowTnum;
+            },
+            showAna:function(){
+                this.isShowAna=!this.isShowAna;
+            },
+            selectSub: function (tindex) {
                 console.log(tindex);
-                 //改变颜色
-                 changeTnumStatus(this.nowIndex,tindex);
-                 this.nowIndex=tindex;
+                //改变颜色
+                changeTnumStatus(this.nowIndex, tindex);
+                this.nowIndex = tindex;
+                //换题
+                changeTimuContent(this);
+            },
+            preT: function () {
+                if (this.nowIndex == 0) {
+                    swal({
+                        title: "温馨提示",
+                        text: "已经是第一题了哟",
+                        icon: "error",
+                        button: "我知道了"
+                    })
+                    return;
+                }
+                //改变颜色
+                changeTnumStatus(this.nowIndex, --this.nowIndex);
+                //ajax 请求题目内容。。。
+                changeTimuContent(this);
+            },
+            nextT: function () {
+                if (this.nowIndex == this.totalNum - 1) {
+                    swal({
+                        title: "温馨提示",
+                        text: "已经是最后一题了哟",
+                        icon: "error",
+                        button: "我知道了"
+                    })
+                    return;
+                }
+                //改变颜色
+                changeTnumStatus(this.nowIndex, ++this.nowIndex);
+                //ajax 请求题目内容。。。
+               var that=this;
 
-             },
-             preT:function () {
-                 if(this.nowIndex==0){
-                     swal({
-                         title: "温馨提示",
-                         text: "已经是第一题了哟" ,
-                         icon: "error",
-                         button:"我知道了"
-                     })
-                     return;
-                 }
-                 //改变颜色
-                 changeTnumStatus(this.nowIndex,--this.nowIndex);
+                changeTimuContent(that)
 
+            }
+        },
+        created: function () {
+            //查询所有的题号
+            //若 需要按照章节 或按照 题目类型 ，则 chpter 和 type!=0 后台判断吧。。。
+            that = this;
+            $.ajax({
+                url: "http://www.gaoxi.com/subjects/initSubjectId",
+                type: "GET",
+                data: {"cType": ctype, "pattern": pattern, "userToken": user_token, "chapter": chapter, "ttype": ttype},
+                async:false,
+                success: function (res) {
+                    //返回第1题的题目信息，和所有的题目编号
+                    that.alltid = res.data.allTid;
+                    if(that.alltid==null||that.alltid.length==0){
+                        alert("没有题目哟啊");
+                    }
+                    that.totalNum=that.alltid.length;
+                    that.subjectinfo = res.data.subjectInfo;
+                    console.log(that.subjectinfo);
+                    changeTimuType(that.subjectinfo.ttype,that);
+                },
+                error: function () {
+                    console.log('请求失败');
+                }
+            });
+        }
+    })
 
-                 //ajax 请求题目内容。。。
-
-                 this.jShow=false;
-                 this.mShow=true;
-                 this.sShow=false;
-
-             },
-             nextT:function () {
-                 if(this.nowIndex==this.totalNum-1){
-                     swal({
-                         title: "温馨提示",
-                         text: "已经是最后一题了哟" ,
-                         icon: "error",
-                         button:"我知道了"
-                     })
-                     return;
-                 }
-                 //改变颜色
-                 changeTnumStatus(this.nowIndex,++this.nowIndex);
-
-
-
-
-                 //ajax 请求题目内容。。。
-
-                 this.jShow=true;
-                 this.mShow=false;
-                 this.sShow=false;
-
-
-
-
-
-             }
-         },
-         created:function(){
-           //查询所有的题号
-      /*       if(pattern!=3&pattern!=4){
-                 that=this;
-                 $.ajax({
-                     url : "http://www.gaoxi.com/courses/getSubjectId",
-                     type : "GET",
-                     data:{"cType":ctype,"pattern":pattern,"userToken":user_token},
-                    // async:false,
-                     success : function(res){
-                         that.alltid=res.data.alltid;
-                         that.subjectinfo=res.data.subjectInfo;
-                     },
-                     error : function(){
-                         console.log('请求失败');
-                     }
-                 });
-             }*/
-         }
+    document.getElementsByClassName('tnum')[0].style.backgroundColor = "#00FFFF";
 
 
-     })
+    //添加题号的active
+    function changeTnumStatus(nowi, willi) {
+        console.log(nowi + "  " + willi);
 
-     document.getElementsByClassName('tnum')[0].style.backgroundColor="#00FFFF";
+        document.getElementsByClassName('tnum')[nowi].style.backgroundColor = nowTColor;
 
-
-     //添加题号的active
-     function changeTnumStatus(nowi,willi){
-         console.log(nowi+"  "+willi );
-
-         document.getElementsByClassName('tnum')[nowi].style.backgroundColor = nowTColor;
-
-         //记录将要成为当前的原始颜色
-        nowTColor=document.getElementsByClassName('tnum')[willi].style.backgroundColor;
+        //记录将要成为当前的原始颜色
+        nowTColor = document.getElementsByClassName('tnum')[willi].style.backgroundColor;
 
         //我们将将要成为 当前选中的题目的背景色变为
-         document.getElementsByClassName('tnum')[willi].style.backgroundColor="#00FFFF";
-     }
+        document.getElementsByClassName('tnum')[willi].style.backgroundColor = "#00FFFF";
+    }
+
+    //切换题目内容
+    function changeTimuContent(that) {
+        //单选按钮变单选,多选不会变得
+        $("#singleOp").find("input").attr("type","radio");
+        $("#judgeOp").find("input").attr("type","radio");
+        //清除所有的checked状态
+        $("#optionContent").find("input").prop("checked",false);
+        //清除所有的danger--->info   disabled --> 非禁用
+        allToInfo();
+        //请求题目，渲染即可
+        $.ajax({
+            url: "http://www.gaoxi.com/subjects/getSubjectById",
+            type: "GET",
+            data: {"tId": that.alltid[that.nowIndex]},
+            //async:false,
+            success: function (res) {
+                that.subjectinfo = res.data;
+                console.log(that.subjectinfo);
+                changeTimuType(that.subjectinfo.ttype,that);
+                //难度评星
+                var str="难度:<span class="+'"ratyli"' + 'data-rate="' + that.subjectinfo.tlevel + '"></span>';
+                $("#demo9").html(str);
+                $("#demo9 .ratyli").ratyli({disable: true});
+            },
+            error: function () {
+                console.log('请求失败');
+            }
+        });
+    }
 
 
 
+    //切换题目的类型标签
+    function changeTimuType(tType,that){
+        that.sShow=false;
+        that.mShow=false;
+        that.jShow=false;
+        if(tType=='S'){
+            that.sShow=true;
+        }else if(tType=='M'){
+            that.mShow=true;
+        }else {
+            that.jShow=true;
+        }
+    }
 
-     $(function () {
-         // Disabled评分条
-         $("#demo9 .ratyli").ratyli({disable:true});
+    //判断作答结果
+    function getTrueAns(nowTid,myAns){
+        console.log("第"+nowTid+"题判断:"+myAns);
+        var trueAns="";
+        $.ajax({
+            url: "http://www.gaoxi.com/subjects/checkAns",
+            type: "GET",
+            data: { "tId":nowTid,"myAns":myAns,"userToken": user_token},
+            async:false,
+            success: function (res) {
+                trueAns=res.data;
+            },
+            error: function () {
+                console.log('请求失败');
+            }
+        });
+        return trueAns;
+    }
+    //题号状态变化
+    function changeTnumColor(myAns,trueAns,nowi){
+        if(trueAns==myAns){
+            $(".tnum").eq(nowi).css("backgroud","#00FF00");
+            nowTColor="#00FF00";
+        }else{
+            $(".tnum").eq(nowi).css("backgroud","#FF0000");
+            nowTColor="#FF0000";
+        }
+    }
 
+    //将所有的css类 去除info 变danger
+    function allToDanger(){
+        $("#optionContent").find(".checkbox").removeClass("checkbox-info");
+        $("#optionContent").find(".checkbox").addClass("checkbox-danger");
+        //禁用所有的按钮
+        $("#optionContent").find("input").prop("disabled",true);
+    }
 
+    function allToInfo(){
+        $("#optionContent").find(".checkbox").removeClass("checkbox-danger");
+        $("#optionContent").find(".checkbox").addClass("checkbox-info");
+        //禁用所有的按钮
+        $("#optionContent").find("input").prop("disabled",false);
+    }
 
-
-
-
-
-
-     })
-
-
+    $(function () {
+        // Disabled评分条
+        $("#demo9 .ratyli").ratyli({disable: true});
+    })
 </script>
 </body>
 </html>

@@ -190,6 +190,7 @@
 .radio-success input[type="radio"]:checked + label::after {
   background-color: #5cb85c; }
 
+
 input[type="checkbox"].styled:checked + label:after,
 input[type="radio"].styled:checked + label:after {
   font-family: 'FontAwesome';
@@ -200,10 +201,10 @@ input[type="radio"] .styled:checked + label::before {
 input[type="checkbox"] .styled:checked + label::after,
 input[type="radio"] .styled:checked + label::after {
   color: #fff; }
-/*当是danger的checkbox是为 ×*/
 .checkbox-danger input[type="checkbox"]:checked + label::after,
 .checkbox-danger input[type="radio"]:checked + label::after {
   font-family: 'FontAwesome';
   content: "\f00d"; }
+
 
 
