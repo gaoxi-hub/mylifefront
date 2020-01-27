@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>徐州工程学院思政课学习管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="css/common.css">
+    <!--验证码css-->
+    <link rel="stylesheet" href="css/verify.css">
+    <!--vue.js-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/jquery.cookie.js"></script>
+    <script src="js/jquery.timers.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+<body>
+
+
+<div class="navbar navbar-inverse" id="commonhead"></div>
+
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="index.html">主页</a>
+                </li>
+                <li>
+                   <a href="#" id="navhref">题库练习</a>
+                </li>
+                <li  class="active">
+                    专项练习
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--单选，多选和判断专项-->
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-4 column">
+            <h2>
+                单选题
+            </h2>
+            <p>
+                <img src="./img/qiu.jpg" class="img-responsive img-rounded">
+                单选题是指对于给定的答案中有且只有一个标准答案
+                一、注意事物的因果关系
+                往往试题要求你以果推因，有时是以因推果；
+                二、排除法
+                从相反的方向去思考问题，比如让你选择正确答案，你可以排除那些有明显错误的，有时这样解题会更快一点。
+            </p>
+            <p>
+                <a class="btn" href="#" id="sStart">开始练习 »</a>
+            </p>
+        </div>
+        <div class="col-md-4 column">
+            <h2>
+                多选题
+            </h2>
+            <p>
+                <img src="./img/winter.jpg" class="img-responsive img-circle">
+                多项选择题，又称多选题，是一种正确选项数目通常多于1个的选择题题型。
+                当正确选项数目可以在1~所有选项数目之间取任意值时，称为不定项选择题。
+                多选题典型的分值为2~4分。
+            </p>
+            <p>
+                <a class="btn" href="#" id="mStart">开始练习 »</a>
+            </p>
+        </div>
+        <div class="col-md-4 column">
+            <h2>
+                判断题
+            </h2>
+            <p>
+                <img src="./img/chun.jpg" class="img-responsive img-rounded">
+                判断题是一种以对或错来选择的答案。
+                判断题是一种以对或错来选择的答案。一般表现为出一句话，然后在后面的括号内打上“√”或“×”。
+                判断题的命题通常是一些比较重要的或有意义的概念、事实、原理或结论。
+            </p>
+            <p>
+                <a class="btn" href="#" id="jStart">开始练习 »</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<footer class="white-wrapper"></footer>
+<!--登录注册模态框-->
+<div class="modal fade" id="modal-container-912437" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+</div>
+<script>
+     $("#commonhead").load("head.html");
+     $(".white-wrapper").load("foot.html");
+     $("#modal-container-912437").load("login.html");
+     //获取课程号
+     var nowUrl=window.location.href;
+     var ctype=nowUrl.split("?")[1].split("=")[1];
+     console.log(ctype);
+
+     $("#navhref").attr("href","subjectwelcom.html?ctype="+ctype);
+     $("#sStart").attr("href","practice.html?ctype="+ctype+"&pattern=4&ttype=S");
+     console.log("practice.html?ctype="+ctype+"&pattern=4&ttype=S");
+     $("#mStart").attr("href","practice.html?ctype="+ctype+"&pattern=4&ttype=M");
+     $("#jStart").attr("href","practice.html?ctype="+ctype+"&pattern=4&ttype=J");
+
+
+
+
+     $(function () {
+        /*必须加上这一句不然tooltip无效果*/
+        $("[data-toggle='tooltip']").tooltip();
+    });
+</script>
+</body>
+</html>

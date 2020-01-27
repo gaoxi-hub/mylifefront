@@ -75,6 +75,7 @@
                     <h3 class="panel-title" style="line-height: 2em;" v-show="jShow">
                         <span class="label label-danger">判断题</span>&nbsp;&nbsp;{{nowIndex+1}}/{{totalNum}}&nbsp;{{subjectinfo.tstem}}
                     </h3>
+                    <p class="pull-right"><button class="btn btn-danger" @click="addToMyCollection"><span class="glyphicon glyphicon-heart" style="color: rgb(255, 140, 60);"></span>加入收藏</button></p>
                 </div>
                 <div class="panel-body" style="height: 250px" id="optionContent">
                     <!--单选题-->
@@ -279,12 +280,62 @@
                 toptionC: "选项C",
                 toptionD: "选项D",
                 toptionE: "选项E",
-                toype: "S",
+                ttype: "S",
                 tlevel: 2,
                 tanalysis: "hello world di zhe tou jieshou suoyuo de chaofen"
             }
         },
         methods: {
+            //收藏题目
+            addToMyCollection:function(){
+                console.log(user_token);
+                if(user_token==''||user_token==undefined){
+                    swal({
+                        title: "温馨提示",
+                        text: "您还未登录,请先登录",
+                        icon: "error",
+                        button: "我知道了"
+                    })
+                    return;
+                }
+                that = this;
+                $.ajax({
+                    url: "http://www.gaoxi.com/subjects/collectByTid",
+                    type: "GET",
+                    data: {"tId": that.alltid[that.nowIndex], "userToken": user_token},
+                    async:false,
+                    success: function (res) {
+                        if(res.retcode=='000000'){
+                            if(res.data=='1'){
+                                swal({
+                                    title: "温馨提示",
+                                    text: "收藏成功",
+                                    icon: "success",
+                                    button: "我知道了"
+                                })
+                            }else{
+                                swal({
+                                    title: "温馨提示",
+                                    text: "已经收藏过了",
+                                    icon: "warning",
+                                    button: "我知道了"
+                                })
+                            }
+                        }else{
+                            swal({
+                                title: "温馨提示",
+                                text: "收藏失败",
+                                icon: "error",
+                                button: "我知道了"
+                            })
+
+                        }
+                    },
+                    error: function () {
+                        console.log('请求失败');
+                    }
+                });
+            },
             //多选题答题按钮点击
             doMCheck:function () {
                 //若是已经作答过的题目禁止点击事件

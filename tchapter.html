@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>徐州工程学院思政课学习管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="css/common.css">
+    <!--验证码css-->
+    <link rel="stylesheet" href="css/verify.css">
+    <!--vue.js-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/jquery.cookie.js"></script>
+    <script src="js/jquery.timers.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+<body>
+
+
+<div class="navbar navbar-inverse" id="commonhead"></div>
+
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="index.html">主页</a>
+                </li>
+                <li>
+                   <a href="#" id="navhref">题库练习</a>
+                </li>
+                <li  class="active">
+                    章节练习
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--章节目录-->
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="panel-group" id="panel-811169">
+                <chapter-items v-for="(item,index) in chapternames"  v-bind:cid="cid" v-bind:pi="index"  v-bind:chaptername="item"></chapter-items>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<footer class="white-wrapper"></footer>
+<!--登录注册模态框-->
+<div class="modal fade" id="modal-container-912437" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+</div>
+<script>
+     $("#commonhead").load("head.html");
+     $(".white-wrapper").load("foot.html");
+     $("#modal-container-912437").load("login.html");
+     //获取课程号
+     var nowUrl=window.location.href;
+     var ctype=nowUrl.split("?")[1].split("=")[1];
+     console.log(ctype);
+     //面包屑导航的地址
+     $("#navhref").attr("href","subjectwelcom.html?ctype="+ctype);
+
+     //课程目录组件,真实课程
+     Vue.component('chapter-items', {
+         // video-item 组件现在接受一个
+         // "prop"，类似于一个自定义特性。
+         // 这个 prop 名为 videoinfo ,名字必须要小写
+         props: ['chaptername','pi','cid'],
+         template:'           <div class="panel panel-warning">\n' +
+         '                    <div class="panel-heading">\n' +
+         '                        <a class="panel-title collapsed" data-toggle="collapse" data-parent="#panel-811169" :href="`#panel-element-${pi}`">第{{pi+1}}章 {{chaptername}}</a>\n' +
+         '                    </div>\n' +
+         '                    <div :id="`panel-element-${pi}`" class="panel-collapse collapse">\n' +
+         '                        <div class="panel-body">\n' +
+         '                            <a class="btn btn-success" :href="`practice.html?ctype=${cid}&pattern=3&chapter=${pi+1}&ttype=0`">全章练习</a>\n' +
+         '                            <a class="btn btn-info" :href="`practice.html?ctype=${cid}&pattern=3&chapter=${pi+1}&ttype=S`">单选题练习</a>\n' +
+         '                            <a class="btn btn-warning" :href="`practice.html?ctype=${cid}&pattern=3&chapter=${pi+1}&ttype=M`">多选题练习</a>\n' +
+         '                            <a class="btn btn-danger" :href="`practice.html?ctype=${cid}&pattern=3&chapter=${pi+1}&ttype=J`">判断题练习</a>\n' +
+         '                        </div>\n' +
+         '                    </div>\n' +
+         '                </div>'
+     })
+
+
+     var courseChapter=new Vue({
+          el:"#panel-811169",
+          data:{
+              cid:ctype,
+              chapternames:["我和我的祖国","你和你的祖国","你和我的祖国","我和你的祖国"]
+          },
+         created:function () {
+             that=this;
+             $.ajax({
+                 url : "http://www.gaoxi.com/subjects/getCourseChapterArr",
+                 type : "GET",
+                 data:{"cId":ctype},
+                 async:false,
+                 success : function(res){
+                     that.chapternames=res.data;
+                 },
+                 error : function(){
+                     console.log('请求失败');
+                 }
+             });
+
+         }
+      })
+
+
+
+
+     /*
+     $("#sStart").attr("href","practice.html?ctype="+ctype+"&pattern=4&ttype=S");
+     console.log("practice.html?ctype="+ctype+"&pattern=4&ttype=S");
+     $("#mStart").attr("href","practice.html?ctype="+ctype+"&pattern=4&ttype=M");
+     $("#jStart").attr("href","practice.html?ctype="+ctype+"&pattern=4&ttype=J");
+      */
+     $(function () {
+        /*必须加上这一句不然tooltip无效果*/
+        $("[data-toggle='tooltip']").tooltip();
+    });
+</script>
+</body>
+</html>
