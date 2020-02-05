@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>徐州工程学院思政课学习管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="css/common.css">
+    <!--验证码css-->
+    <link rel="stylesheet" href="css/verify.css">
+    <!--头像-->
+    <link href="./css/avater/cropper.min.css" rel="stylesheet">
+    <link href="./css/avater/sitelogo.css" rel="stylesheet">
+
+    <!--vue.js-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!--必须使用这款jquery 2.x-->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.cookie.js"></script>
+    <script src="js/jquery.timers.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <!--avater-->
+    <script src="js/cropper.min.js"></script>
+    <script src="js/sitelogo.js"></script>
+</head>
+<body>
+<div class="navbar navbar-inverse" id="commonhead"></div>
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="index.html">主页</a>
+                </li>
+                <li class="active">
+                    个人信息管理
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--修改密码页面 -->
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-offset-4 col-md-4 column">
+            <form role="form" id="userinfo">
+                <div class="form-group">
+                    <label for="originpwd">原始密码</label>
+                    <input  id="originpwd" class="form-control" />
+                </div>
+                <div class="form-group" id="stunoformgroup">
+                    <label for="newpwd">新密码</label>
+                    <input  id="newpwd" class="form-control"  />
+                    <span class="help-block text-danger" v-show="isShow">学号不存在</span>
+                </div>
+                <div class="form-group">
+                    <label for="repeatpwd">重复输入</label>
+                    <input  id="repeatpwd"    class="form-control" />
+                </div>
+
+
+                <button type="button" id="modifypwd" class="btn btn-info btn-block">提交个人资料</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div style="height: 50px;"></div>
+<footer class="white-wrapper"></footer>
+<!--登录注册模态框-->
+<div class="modal fade" id="modal-container-912437" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+</div>
+<script>
+    $("#commonhead").load("head.html");
+    $(".white-wrapper").load("foot.html");
+    $("#modal-container-912437").load("login.html");
+
+    $(function () {
+        //暂时未完工
+
+
+        /*必须加上这一句不然tooltip无效果*/
+        $("[data-toggle='tooltip']").tooltip();
+    });
+</script>
+</body>
+</html>

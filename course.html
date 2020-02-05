@@ -249,7 +249,7 @@
             '                                <div :id="`panel-element-${pi}`" class="panel-collapse collapse">\n' +
             '                                    <div class="panel-body">\n' +
             '                                        <ul class="list-group">\n' +
-            '                                            <a  v-for="item in coursechapter.chapterRes"  :href="`http://www.gaoxi.com/playcourse.html?courseId=${cid}&videoId=${item.videoHref}`" class="list-group-item"><i class="fa fa-youtube-play" style="color:red"></i>&nbsp;{{item.videoName}}</a>\n' +
+            '                                            <a  v-for="item in coursechapter.chapterRes"  :href="`http://www.gaoxi.com/playcourse.html?courseId=${cid}&videoId=${item.videoId}`" class="list-group-item"><i class="fa fa-youtube-play" style="color:red"></i>&nbsp;{{item.videoName}}</a>\n' +
             '                                        </ul>\n' +
             '                                    </div>\n' +
             '                                </div>\n' +
@@ -266,6 +266,7 @@
                         'chapterName':'我的帝国我做主',
                         chapterRes:[
                             {
+
                                 videoName:'我的天空',
                                 videoHref:'11'
                             },

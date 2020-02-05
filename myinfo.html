@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>徐州工程学院思政课学习管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="css/common.css">
+    <!--验证码css-->
+    <link rel="stylesheet" href="css/verify.css">
+    <!--头像-->
+    <link href="./css/avater/cropper.min.css" rel="stylesheet">
+    <link href="./css/avater/sitelogo.css" rel="stylesheet">
+
+    <!--vue.js-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!--必须使用这款jquery 2.x-->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.cookie.js"></script>
+    <script src="js/jquery.timers.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <!--avater-->
+    <script src="js/cropper.min.js"></script>
+    <script src="js/sitelogo.js"></script>
+</head>
+<body>
+<div class="navbar navbar-inverse" id="commonhead"></div>
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="index.html">主页</a>
+                </li>
+                <li class="active">
+                    个人信息管理
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--信息管理主体 -->
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-offset-4 col-md-4 column">
+            <form role="form" id="userinfo">
+                <div class="form-group">
+                    <label for="username">用户名称</label>
+                    <input  v-model="uname" class="form-control" id="username" />
+                </div>
+                <div class="form-group" id="stunoformgroup">
+                    <label for="stuno">用户学号绑定</label>
+                    <input  v-model="stuno" @change="changeStuNo" class="form-control" id="stuno" />
+                    <span class="help-block text-danger" v-show="isShow">学号不存在</span>
+                </div>
+                <div class="form-group">
+                    <label>用户头像</label>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div id="crop-avatar" class="col-md-6">
+                                <div class="avatar-view" title="" data-original-title="Change Logo Picture">
+                                    <img  style="width: 120px; height: 120px" :src="uimg" id="uimgshow" alt="Logo">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input hidden id="uimg" v-model="uimg">
+                <button type="button"  @click="doSubmitInfo" class="btn btn-info btn-block">提交个人资料</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div style="height: 30px;"></div>
+<!--头像弹出层-->
+<div class="modal fade" id="avatar-modal" aria-hidden="true" aria-labelledby="avatar-modal-label" role="dialog"
+     tabindex="-1" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form class="avatar-form"
+                  action="http://www.gaoxi.com/admins/uploadSignalFile"
+                  enctype="multipart/form-data" method="post" id="uploadForm">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal" type="button">×</button>
+                    <h4 class="modal-title" id="avatar-modal-label">Change Logo Picture</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="avatar-body">
+                        <div class="avatar-upload">
+                            <!--<input class="avatar-src" name="avatar_src" type="hidden">-->
+                            <!--<input class="avatar-data" name="avatar_data" type="hidden">-->
+                            <label for="avatarInput">图片上传</label>
+                            <input class="avatar-input" id="avatarInput" name="file" type="file"></div>
+                        <div class="row">
+                            <div class="col-md-9">
+                                <div class="avatar-wrapper"></div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="avatar-preview preview-lg"><img src="img/avater1.jpg"  style="height:184px;width:184px"></div>
+                                <div class="avatar-preview preview-md"><img src="img/avater1.jpg" style="height:100px;width:100px"></div>
+                                <div class="avatar-preview preview-sm"><img src="img/avater1.jpg" style="height:50px;width:50px"></div>
+                            </div>
+                        </div>
+                        <div class="row avatar-btns">
+                            <div class="col-md-9">
+                                <div class="btn-group">
+                                    <button class="btn" data-method="rotate" data-option="-90" type="button"
+                                            title="Rotate -90 degrees"><i class="fa fa-undo"></i> 向左旋转</button>
+                                </div>
+                                <div class="btn-group">
+                                    <button class="btn" data-method="rotate" data-option="90" type="button"
+                                            title="Rotate 90 degrees"><i class="fa fa-repeat"></i> 向右旋转</button>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-success btn-block avatar-save" type="button" id="submitAvater"><i
+                                        class="fa fa-save"></i> 保存修改</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--加载-->
+<div class="loading" aria-label="Loading" role="img" tabindex="-1"></div>
+
+<footer class="white-wrapper"></footer>
+<!--登录注册模态框-->
+<div class="modal fade" id="modal-container-912437" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+</div>
+<script>
+    $("#commonhead").load("head.html");
+    $(".white-wrapper").load("foot.html");
+    $("#modal-container-912437").load("login.html");
+
+    //Vue实例
+    var userInfo = new Vue({
+        el:"#userinfo",
+        data:{
+            uId:1,
+            uname:"gaoxi",
+            stuno:"20160505136",
+            uimg:"http://www.gaoxi.comm",
+            isShow:false
+        },
+        created:function(){
+            var that=this;
+            //初始化表单数据
+            var user_token=$.cookie("user_token");
+            $.ajax({
+                url : "http://www.gaoxi.com/auths/login/getuserinfo",
+                type : "GET",
+                data: {"userToken":user_token},
+                success : function(res){
+                    var userInfo=res.data;
+                    if(userInfo!=null){
+                        console.log(userInfo);
+                        if(userInfo.userImg !=''){
+                            $("#userimg").attr("src",userInfo.userImg);
+                            that.uimg=userInfo.userImg;
+                        }
+                        that.uId=userInfo.userId;
+                        that.uname=userInfo.userName;
+                        that.stuno=userInfo.userStuno;
+
+                    }else{
+                        window.location.href="http://www.gaoxi.com"
+                    }
+
+                },
+                error : function(){
+                    alert('请求失败');
+                }
+            });
+
+        },
+        methods:{
+            changeStuNo:function () {
+                console.log(this.stuno);
+                var that =this;
+                //验证学号
+                $.ajax({
+                    url : "http://www.gaoxi.com/admins/checkStuNo",
+                    type : "GET",
+                    data: {"stuNo":that.stuno},
+                    success : function(res){
+                        if(res.data=="1"){
+                            that.isShow=false;
+                            $("#stunoformgroup").removeClass("has-error");
+                            $("#stunoformgroup").addClass("has-success");
+
+                        }else{
+                            that.isShow=true;
+                            $("#stunoformgroup").addClass("has-error");
+                            $("#stunoformgroup").removeClass("has-success");
+
+                        }
+
+                    },
+                    error : function(){
+                        alert('请求失败');
+                    }
+                });
+            },
+            doSubmitInfo:function () {
+                if(this.isShow==true) {
+
+                    return ;
+                } else{
+                    var user_token=$.cookie("user_token");
+                    var that=this;
+                    var requestData={"userId":this.uId,"userStuno":this.stuno,"userImg":this.uimg};
+                    console.log(requestData);
+                    var data=JSON.stringify(requestData);
+                    $.ajax({
+                        url : "http://www.gaoxi.com/auths/profile/changePersonalInfo",
+                        type : "post",
+                        headers:{"userToken":user_token},
+                        contentType:"application/json",
+                        data: data,
+                        success : function(res){
+                            if(res.retcode=="000000"){
+                                swal({
+                                    title: "温馨提示",
+                                    text: "修改成功" ,
+                                    icon: "success",
+                                    button:"回到主页"
+                                }).then((value) =>{
+                                    if(value){
+                                        window.location.href="http://www.gaoxi.com/index.html";
+                                    }
+                                });
+                            }else{
+                                swal({
+                                    title: "温馨提示",
+                                    text: "修改失败" ,
+                                    icon: "error"
+                                });
+                            }
+
+                        },
+                        error : function(){
+                            alert('请求失败');
+                        }
+                    });
+
+
+
+
+                }
+            }
+        }
+    })
+
+
+    //监听头像提交
+    $("#submitAvater").click(function () {
+
+        var form = new FormData(document.getElementById("uploadForm"));
+        $.ajax({
+            type:'post',
+            url:$("#uploadForm").attr("action"),
+            data:form,
+            async: false,//默认true，false同步提交
+            processData:false,
+            contentType:false,
+            success:function(res){
+                if(res.retcode=="000000"){
+                    var imgUrl=res.data;
+                    userInfo.uimg=imgUrl;
+                    $("#avatar-modal").modal('hide');
+                }else{
+                    alert("fail upload");
+                }
+            },
+            error:function(XMLHttpRequest, textStatus, errorThrown){
+                alert("异常错误"+XMLHttpRequest.status);
+                console.error(textStatus);
+                console.error(XMLHttpRequest.status);
+                console.error(XMLHttpRequest.readyState);
+                return false ;
+            }
+        });
+    });
+
+
+    $(function () {
+
+
+        /*必须加上这一句不然tooltip无效果*/
+        $("[data-toggle='tooltip']").tooltip();
+    });
+</script>
+</body>
+</html>
