@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>徐州工程学院思政课学习管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="css/common.css">
+    <!--验证码css-->
+    <link rel="stylesheet" href="css/verify.css">
+    <!--vue.js-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/jquery.cookie.js"></script>
+    <script src="js/jquery.timers.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="js/echarts.js"></script>
+
+    <script src="js/lefttime.js"></script>
+
+
+
+    <style type="text/css">
+        table.data-table{width:100%;}
+        table.data-table tr:odd{background:#dcebff;}
+        table.data-table td{line-height:24px;padding:3px;vertical-align: top;}
+        table.data-table th{height:50px;line-height:50px;padding: 3px;font-size:20px;text-align: left;}
+        table.data-table .colspan-a{width:35%;}
+        table.data-table .colspan-b{width:25%;}
+        table.data-table .colspan-c{width:40%;}
+        table.data-table td pre{display: block; padding:5px; border: 1px solid #00caff;background: #f8fcff;text-align: left;}
+        .data-show-box{line-height:30px;}
+        .date-tiem-span,.date-s-span{display: inline-block;font-size:18px; width:36px; height:30px;line-height:30px; text-align: center; color:#fff; border-radius:5px;}
+        .date-tiem-span{ background:#333;}
+        .date-s-span{ background:#f00;}
+    </style>
+
+</head>
+<body>
+<div class="navbar navbar-inverse" id="commonhead"></div>
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="index.html">主页</a>
+                </li>
+                <li>
+                    <a href="">我的班级</a>
+                </li>
+                <li class="active">
+                    任务详情
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--作业详情页-->
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="row clearfix">
+                <div class="col-md-6 column">
+                    <div class="panel panel-warning" id="taskInfoVue">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                作业标题:{{taskInfo.taskTitle}}
+                            </h3>
+                            <div style="height: 10px"></div>
+                            <tr>
+                                <td class="colspan-a" >
+                                    <div class="data-show-box" id="dateShow1">
+                                         <span class="date-tiem-span d">00</span>天
+                                         <span class="date-tiem-span h">00</span>时
+                                        <span class="date-tiem-span m">00</span>分
+                                        <span class="date-s-span s">00</span>秒
+                                    </div>
+                                </td>
+                            </tr>
+                        </div>
+                        <div class="panel-body">
+                            <div>
+                                作业要求:{{taskInfo.taskDescr}}
+                            </div>
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>
+                                        附件名称
+                                    </th>
+                                    <th>
+                                        操作
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(item ,index) in taskInfo.taskFiles">
+                                    <td >
+                                        附件{{index+1 }}
+                                    </td>
+                                    <td>
+                                        <a class="glyphicon glyphicon-cloud" :href="['http://www.gaoxi.com/admins/downLoadFile?fileUrl='+item]">下载此文件</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="panel-footer clearfix">
+                            <form id="fileForm" action="http://www.gaoxi.com/admins/submitMyWork" enctype="multipart/form-data">
+                                <input type="hidden"  name="stuNo" v-bind:value="stuId">
+                                <input type="hidden"  name="taskId" v-bind:value="tId">
+                                <input type="file" name="file">
+                            </form>
+                           <button  class="btn btn-success pull-right"  onclick="submitWork()">{{taskInfo.personalStatus=='0'?'提交我的作业':'重新提交我的作业'}}
+                           </button> </div>
+                    </div>
+                </div>
+                <div class="col-md-6 column">
+                    <div id="finishChart" style="height:400px"></div>
+                </div>
+            </div>
+            <div class="row clearfix">
+                <div class="col-md-12 column" id="stuFinishTable">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>
+                                学号
+                            </th>
+                            <th>
+                                学生姓名
+                            </th>
+                            <th>
+                                上交时间
+                            </th>
+                            <th>
+                                状态
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(item) in stuFinishInfo" v-bind:class="item.submitTime!=null?'success':''">
+                            <td>
+                                {{item.stuId}}
+                            </td>
+                            <td>
+                                {{item.stuName}}
+                            </td>
+                            <td>
+                                {{item.submitTime}}
+                            </td>
+                            <td>
+                                {{item.submitTime!=null?'已提交':'未提交'}}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<footer class="white-wrapper"></footer>
+<!--登录注册模态框-->
+<div class="modal fade" id="modal-container-912437" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+</div>
+<script>
+    $("#commonhead").load("head.html");
+    $(".white-wrapper").load("foot.html");
+    $("#modal-container-912437").load("login.html");
+    var nowStuId='';
+
+    //获取token
+    var user_token=$.cookie("user_token");
+    if(user_token==undefined || user_token ==''){
+        //提醒登录
+        swal({
+            title: "温馨提示",
+            text: "您还没有登录,5s后自动跳转主页" ,
+            icon: "error",
+            button:"立即返回"
+        }).then((value) =>{
+            if(value){
+                window.location.href="http://www.gaoxi.com/index.html";
+            }
+        });
+        //5s跳转主页面
+        setTimeout(function(){
+            window.location.href="http://www.gaoxi.com/index.html"
+        },5000);
+    }else{
+        //有token信息获取用户信息
+        $.ajax({
+            url : "http://www.gaoxi.com/auths/login/getuserinfo",
+            type : "GET",
+            data: {"userToken":user_token},
+            async:false,
+            success : function(res){
+                var userInfo=res.data;
+                if(userInfo!=null){
+                    if(userInfo.userStuno!=null&&userInfo.userStuno!=undefined&&userInfo.userStuno!=''){
+                        nowStuId=userInfo.userStuno;
+                    }else{
+                        swal({
+                            title: "温馨提示",
+                            text: "您还没有绑定学号,5s后自动跳转主页" ,
+                            icon: "error",
+                            button:"立即去绑定"
+                        }).then((value) =>{
+                            if(value){
+                                window.location.href="http://www.gaoxi.com/myinfo.html";
+                            }
+                        });
+                        //5s跳转主页面
+                        setTimeout(function(){
+                            window.location.href="http://www.gaoxi.com/index.html"
+                        },5000);
+                    }
+                }else{
+                    window.location.href="http://www.gaoxi.com/index.html";
+                }
+            },
+            error : function(){
+                alert('请求失败');
+            }
+        });
+    }
+    //*******************
+
+    //获取任务的id号
+    var nowurl=window.location.href;
+    var tId=nowurl.split("?")[1].split("=")[1];
+    console.log(tId);
+
+    var taskInfoApp=new Vue({
+        el:"#taskInfoVue",
+        data:{
+            stuId:nowStuId,
+            tId:tId,
+            taskInfo:{
+                taskId:1,
+                taskTitle:'交一篇快乐的文档',
+                taskDescr:'快点叫不要少于3000字',
+                taskEndTime:'2020-2-6 17:41:00',
+                personalStatus:'0',
+                taskFiles:['http://112321.21312.321313/group01/334/23','http://112321.21312334/23']
+            }
+        },
+        created:function () {
+            var that=this;
+            $.ajax({
+                url : "http://www.gaoxi.com/admins/stuLookTaskDetail",
+                type: "POST",
+                data: {"stuNo":nowStuId,"tId":tId},
+                async:false,
+                success : function(res){
+                    console.log(res.data);
+                    that.taskInfo=res.data;
+                    startTimeDown(that.taskInfo.taskEndTime);
+                },
+                error : function(){
+                    alert('请求失败');
+                }
+            });
+        }
+
+    })
+
+
+    var stuFinishTable=new Vue({
+        el:"#stuFinishTable",
+        data:{
+            stuFinishInfo:[
+                {
+                    stuId:'201423212',
+                    stuName:'高溪',
+                    submitTime:'2013343434',
+                },
+                {
+                    stuId:'201423212',
+                    stuName:'高溪',
+                    submitTime:null,
+                }
+            ]
+        },
+        created:function () {
+            var that=this;
+            $.ajax({
+                url : "http://www.gaoxi.com/admins/stuFinishList",
+                type: "POST",
+                data: {"tId":tId},
+                async:false,
+                success : function(res){
+                    console.log(res.data);
+                    that.stuFinishInfo=res.data;
+                                    },
+                error : function(){
+                    alert('请求失败');
+                }
+            });
+
+
+        }
+
+    })
+
+
+    function startTimeDown(endTime){
+        $.leftTime(endTime,function(d){
+            if(d.status){
+                var $dateShow1=$("#dateShow1");
+                $dateShow1.find(".d").html(d.d);
+                $dateShow1.find(".h").html(d.h);
+                $dateShow1.find(".m").html(d.m);
+                $dateShow1.find(".s").html(d.s);
+            }else {
+                swal({
+                    title: "温馨提示",
+                    text: "时间到自动交卷",
+                    icon: "warning",
+                    button: "我知道了"
+                })
+
+            }
+        });
+    }
+
+    function submitWork() {
+        //提交文件
+        var form = new FormData(document.getElementById("fileForm"));
+        console.log(form);
+
+        $.ajax({
+            type:'post',
+            url:$("#fileForm").attr("action"),
+            data:form,
+            async: false,//默认true，false同步提交
+            processData:false,
+            contentType:false,
+            success:function(res){
+                if(res.retcode=="000000"){
+                    swal({
+                        title: "温馨提示",
+                        text: "上传成功" ,
+                        icon: "success",
+                        button:"好的"
+                    }).then((value) =>{
+                        if(value){
+                            window.location.reload();
+                        }
+                    });
+                }else{
+                    alert("fail upload");
+                }
+            },
+            error:function(XMLHttpRequest, textStatus, errorThrown){
+                alert("异常错误"+XMLHttpRequest.status);
+                console.error(textStatus);
+                console.error(XMLHttpRequest.status);
+                console.error(XMLHttpRequest.readyState);
+                return false ;
+            }
+        });
+
+
+
+    }
+
+
+    $(function () {
+
+
+
+        var totalStu=stuFinishTable.stuFinishInfo.length;
+        var noFinishSum=0;
+        for(var i=0;i<stuFinishTable.stuFinishInfo.length;i++){
+            if(stuFinishTable.stuFinishInfo[i].submitTime==null){
+                noFinishSum++;
+            }
+        }
+
+
+
+
+
+        /*完成饼状图统计*/
+        var finishChart=echarts.init(document.getElementById('finishChart'));
+        //学习进度统计;
+        var option = {
+            title: {
+                text: '作业上交记录统计图',
+                subtext: '百度提供',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b} : {c} ({d}%)'
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                data: ['已上交', '未上交']
+            },
+            series: [
+                {
+                    name: '作业上交饼状图',
+                    type: 'pie',
+                    radius: '55%',
+                    center: ['50%', '60%'],
+                    data: [
+                        {value: totalStu-noFinishSum, name: '已上交'},
+                        {value: noFinishSum, name: '未上交'},
+                       ],
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+        finishChart.setOption(option);
+        //异步请求上交数据
+            $.ajax({
+                url : "http://www.gaoxi.com/courses/getUserDoSubjectStatus",
+                type : "GET",
+                data:{"tId":tId},
+                async:true,
+                success : function(res){
+                    if(res.retcode=='000000'){
+                        finishChart.setOption({
+                            series: [
+                                {
+                                    data: res.data
+                                }
+                            ]
+                        })
+                    }else {
+
+                    }
+                },
+                error : function(){
+                    console.log('请求失败');
+                }
+            });
+
+
+
+
+
+
+
+
+        /*必须加上这一句不然tooltip无效果*/
+        $("[data-toggle='tooltip']").tooltip();
+    });
+</script>
+</body>
+</html>

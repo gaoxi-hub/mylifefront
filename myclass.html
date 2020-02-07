@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>徐州工程学院思政课学习管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="css/common.css">
+    <!--验证码css-->
+    <link rel="stylesheet" href="css/verify.css">
+    <!--vue.js-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/jquery.cookie.js"></script>
+    <script src="js/jquery.timers.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <style>
+
+        .profile-wrapper {
+            padding: 10px 0;
+        }
+
+        .fadeInRight {
+            -webkit-animation-name: fadeInRight;
+            animation-name: fadeInRight;
+        }
+
+
+
+        .fadeInRight {
+            -webkit-animation-name: fadeInRight;
+            animation-name: fadeInRight;
+        }
+        .animated {
+            -webkit-animation-duration: 1s;
+            animation-duration: 1s;
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: both;
+        }
+
+
+        .about-profile .pro-title {
+            font-weight: 700;
+            color: #040404;
+            position: relative;
+            width: 120px;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+
+
+    </style>
+</head>
+<body>
+<div class="navbar navbar-inverse" id="commonhead"></div>
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="index.html">主页</a>
+                </li>
+                <li class="active">
+                    我的班级
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--信息主体-->
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column" id="mainInfo">
+            <div class="jumbotron">
+                <h1>
+                    {{courseInfo.cname}}
+                </h1>
+                <p>
+                    {{courseInfo.cdescr}}
+                </p>
+            </div>
+            <div class="tabbable" id="tabs-124241">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href="#panel-954910" data-toggle="tab">班级信息</a>
+                    </li>
+                    <li>
+                        <a href="#panel-858216" data-toggle="tab">任务列表 <span class="label label-danger">{{classTaskInfos.length>0?classTaskInfos.length:''}}</span></a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="panel-954910">
+                        <div class="container">
+                            <div class="row clearfix">
+                                <div class="col-md-4 column">
+                                    <img alt="140x140"  style="height: 390px" :src="teacherInfo.teacherImgUrl" class="img-thumbnail" />
+                                </div>
+                                <div class="col-md-8 column">
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">
+                                                班级基本信息
+                                            </h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <blockquote>
+                                                <p>
+                                                    一个人像一块砖砌在大礼堂的墙里，是谁也动不得的；但是丢在路上，挡人走路是 要被人一脚踢开的。
+                                                </p><small>艾思奇<cite>--</cite></small>
+                                            </blockquote>
+                                            <div class="profile-wrapper wow fadeInRight animated" data-wow-delay="0.3s" style="visibility: visible;-webkit-animation-delay: 0.3s; -moz-animation-delay: 0.3s; animation-delay: 0.3s;">
+                                                <h4><span class="text-success">班级名称:</span>{{classInfo.className}}</h4>
+                                                <small class="text-info" >&nbsp;&nbsp;班级简介:{{classInfo.classMeta}}</small>
+                                                <div class="about-profile" style="margin-top: 5px">
+                                                    <ul class="admin-profile">
+                                                        <li><span class="pro-title"> 老师姓名 </span> <span class="pro-detail">{{teacherInfo.teacherName}}</span></li>
+                                                        <li><span class="pro-title"> 性别 </span> <span class="pro-detail">{{teacherInfo.teacherSex=='M'?'男':'女'}}</span></li>
+                                                        <li><span class="pro-title"> 教授科目 </span> <span class="pro-detail">{{courseInfo.cname}}</span></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel-footer">
+                                            do your best！！
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--任务列表-->
+                    <div class="tab-pane" id="panel-858216">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>
+                                    任务名称
+                                </th>
+                                <th>
+                                    截止日期
+                                </th>
+                                <th>
+                                    操作
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="item in classTaskInfos" class="info">
+                                <th>
+                                    {{item.taskTitle}}
+                                </th>
+                                <th>
+                                    {{item.taskEndTime}}
+                                </th>
+                                <th>
+                                    <button @click="taskDetail(item.taskId)" class="btn btn-danger">查看详情</button>
+                                </th>
+                            </tr>
+
+                            </tbody>
+                        </table>
+
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<footer class="white-wrapper"></footer>
+<!--登录注册模态框-->
+<div class="modal fade" id="modal-container-912437" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+</div>
+<script>
+    $("#commonhead").load("head.html");
+    $(".white-wrapper").load("foot.html");
+    $("#modal-container-912437").load("login.html");
+
+    var nowStuId='';
+
+    //获取token
+    var user_token=$.cookie("user_token");
+    if(user_token==undefined || user_token ==''){
+        //提醒登录
+        swal({
+            title: "温馨提示",
+            text: "您还没有登录,5s后自动跳转主页" ,
+            icon: "error",
+            button:"立即返回"
+        }).then((value) =>{
+            if(value){
+                window.location.href="http://www.gaoxi.com/index.html";
+            }
+        });
+        //5s跳转主页面
+        setTimeout(function(){
+            window.location.href="http://www.gaoxi.com/index.html"
+        },5000);
+    }else{
+        //有token信息获取用户信息
+        $.ajax({
+            url : "http://www.gaoxi.com/auths/login/getuserinfo",
+            type : "GET",
+            data: {"userToken":user_token},
+            async:false,
+            success : function(res){
+                var userInfo=res.data;
+                if(userInfo!=null){
+                    if(userInfo.userStuno!=null&&userInfo.userStuno!=undefined&&userInfo.userStuno!=''){
+                        nowStuId=userInfo.userStuno;
+                    }else{
+                        swal({
+                            title: "温馨提示",
+                            text: "您还没有绑定学号,5s后自动跳转主页" ,
+                            icon: "error",
+                            button:"立即去绑定"
+                        }).then((value) =>{
+                            if(value){
+                                window.location.href="http://www.gaoxi.com/myinfo.html";
+                            }
+                        });
+                        //5s跳转主页面
+                        setTimeout(function(){
+                            window.location.href="http://www.gaoxi.com/index.html"
+                        },5000);
+                    }
+                }else{
+                    window.location.href="http://www.gaoxi.com/index.html";
+                }
+            },
+            error : function(){
+                alert('请求失败');
+            }
+        });
+    }
+
+
+
+    var mainInfo=new Vue({
+        el:"#mainInfo",
+        data:{
+            teacherInfo:{
+                teacherName:'James',
+                teacherSex:'M',
+                teacherImgUrl:'http://q4334xp0f.bkt.clouddn.com/FmNwrDILWmCVm2tTWYxLDIL5ZfzG',
+            },
+            courseInfo:{
+                cid:1,
+                cname:'马克思主义基本原理概论',
+                cdescr:'《马克思主义基本原理概论》课程系高校思想政治理论课程体系的重要组成部分，是面向全校本科生的公共必修课程。本课程教学内容包括马克思主义哲学、政治经济学和科学社会主义，围绕什么是马克思主义，为什么要始终坚持马克思主义和怎样坚持和发展马克思主义这一主题，以马克思主义世界观和方法论为重点，以人类社会发展的基本规律为主线，从理论与实践相结合的角度全面阐述马克思主义的基本原理，对学生进行系统的马克思主义理论教育，使学生从整体上把握马克思主义的精神实质、基本理论和方法论原则。本课程教学旨在帮助学生树立马克思主义世界观、人生观和价值观，学会运用马克思主义的基本立场、观点和方法去分析问题和解决问题，为学生确立建设中国特色社会主义的理想信念，自觉投身民族复兴、国家强盛的伟大实践，提供必要的思想理论基础.'
+            },
+            classInfo:{
+                classId:'1',
+                className:'计嵌班级',
+                classMeta:"这个班级有爱"
+            },
+            classTaskInfos:[{
+                taskId:1,
+                taskTitle:'玩车QQ飞车',
+                taskEndTime:'2019-5-6 10:44'
+                },{
+                taskId:2,
+                taskTitle:'玩车QQ飞车',
+                taskEndTime:'2019-5-6 10:44'
+            }]
+        },
+        created:function(){
+            //初始化数据
+            var that = this;
+            $.ajax({
+                url: "http://www.gaoxi.com/admins/getMyClassInfo",
+                type: "GET",
+                data: {"stuNo": nowStuId},
+                async:false,
+                success: function (res) {
+                    console.log(res);
+                    that.classInfo=res.data.classInfo;
+                    that.teacherInfo=res.data.classInfo.teacherInfo;
+                    that.classTaskInfos=res.data.classInfo.teacherInfo.classTaskInfos;
+                    that.courseInfo=res.data.classInfo.teacherInfo.courseInfo;
+                    console.log();
+                    // that.courseInfo.cId=res.data.classInfo.teacherInfo.courseInfo.cId;
+                    //
+                    // that.courseInfo.cName=res.data.classInfo.teacherInfo.courseInfo.cName;
+                    // that.courseInfo.cDescr=res.data.classInfo.teacherInfo.courseInfo.cDescr;
+
+
+
+
+
+
+                },
+                error: function () {
+                    console.log('请求失败');
+                }
+            });
+        },
+        methods:{
+            taskDetail:function (taskId) {
+                console.log(taskId);
+                window.location.href="http://www.gaoxi.com/taskdetail.html?taskId="+taskId;
+            }
+        }
+    })
+
+
+
+
+
+
+
+
+
+
+
+    $(function () {
+
+        /*必须加上这一句不然tooltip无效果*/
+        $("[data-toggle='tooltip']").tooltip();
+    });
+</script>
+</body>
+</html>
