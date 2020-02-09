@@ -1,0 +1,73 @@
+
+ul, li, ol { list-style: none; }
+
+.star_list{
+    height:21px;
+    margin:50px;
+    line-height:21px;
+}
+
+
+.star_score {
+    background:url(../../img/starimg/starky.png);
+    width:160px;
+    height:21px;
+    position:relative;
+    left: 20px;
+}
+
+.star_score a{
+    height:21px;
+    display:block;
+    text-indent:-999em;
+    position:absolute;
+    left:0;
+}
+
+.star_score a:hover{
+    background:url(../../img/starimg/starsy.png);
+    left:0;
+}
+
+.star_score a.clibg{
+    background:url(../../img/starimg/starsy.png);
+    left:0;
+}
+
+
+/*星星样式*/
+
+.show_number{
+    padding-left:50px;
+    padding-top:20px;
+}
+
+.show_number li{
+    width:240px;
+    border:1px solid #ccc;
+    padding:10px;
+    margin-right:5px;
+    margin-bottom:20px;
+}
+
+.atar_Show{
+    background:url(../../img/starimg/starky.png);
+    width:160px; height:21px;
+    position:relative;
+    float:left;
+}
+
+.atar_Show p{
+    background:url(../../img/starimg/starsy.png);
+    left:0;
+    height:21px;
+    width:110px;
+    margin-bottom: 0px;
+    margin-left: -8px;
+
+}
+
+.show_number li span{
+    display:inline-block;
+    line-height:21px;
+}

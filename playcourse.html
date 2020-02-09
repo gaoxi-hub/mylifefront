@@ -64,7 +64,8 @@
 <div id="test2">
     <div class="list-group" id="chapterVue">
         <h2>目录</h2>
-        <a  href="javascript:void(0);"  :onclick="`getNewVideo(${item.id})`" class="list-group-item clist"  v-for="item in videoList" >{{item.name}}</a>
+        <a  href="javascript:void(0);"  :onclick="`getNewVideo(${item.id})`" class="list-group-item clist"  v-for="item in videoList" >{{item.name}} <span class="label label-success  finishStatus"  style="display: none">已完成</span></a>
+
     </div>
 </div>
 
@@ -99,6 +100,57 @@
     var videoId=args[1].split("=")[1];
     console.log("课程号=："+courseId);
     console.log("视频ID="+videoId);
+
+    //获取一把用户id
+    var userId=0;
+
+    //登录信息获取
+    var user_token=$.cookie("user_token");
+    console.log(user_token);
+    //若用户已经登录信息获取
+    if(user_token!=undefined&&user_token!='')
+    {
+        console.log(user_token);
+        $.ajax({
+            url : "http://www.gaoxi.com/auths/login/getuserinfo",
+            type : "GET",
+            async:false,
+            data: {"userToken":user_token},
+            success : function(res){
+                var userInfo=res.data;
+                if(userInfo!=null){
+                     userId=userInfo.userId;
+                }
+            },
+            error : function(){
+                alert('请求失败');
+            }
+        });
+    }else{
+       window.location.href="http://www.gaoxi.com/index.html";
+    }
+
+    //用户观看此视频记录+1
+    $.ajax({
+        url : "http://www.gaoxi.com/courses/addVideoPlayTimes",
+        type : "POST",
+        data:{"userId":userId,"videoId":videoId},
+        async:false,
+        success : function(res){
+
+        },
+        error : function(){
+            console.log('请求失败');
+        }
+    });
+
+
+
+
+
+
+
+    //用户有token信息,判断是否将课程加入学习
     //2.获取此课程的所有播放资源
     var playList=[{
         id:1,
@@ -153,16 +205,53 @@
 
     //获取当前的播放资源
     var nowSource;
+    var nowPlayIndex;
     for(var i=0;i<playList.length;i++)
     {
         console.log(playList[i]);
         if(playList[i].id==videoId){
             nowSource=playList[i].source;
+            nowPlayIndex=i;
             clearCListActive();
             addListActive(i);
             break;
         }
     }
+
+    //获取视频完成情况
+    $.ajax({
+        url : "http://www.gaoxi.com/courses/getVideoFinishStatus",
+        type : "POST",
+        data:{"userId":userId,"courseId":courseId},
+        success : function(res){
+            console.log(res);
+            var finishList=res.data;
+            for(var i=0;i<finishList.length;i++){
+                if(finishList[i].userVideoResourceRel==null){
+
+                }else{
+
+                    var thisUserStatus=finishList[i].userVideoResourceRel;
+
+                    if(thisUserStatus.status=='0'){
+
+                    }else{
+                        console.log("hello")
+                       document.getElementsByClassName("finishStatus")[i].style.display="inline";
+                    }
+                }
+
+
+            }
+        },
+        error : function(){
+            console.log('请求失败');
+        }
+    });
+
+
+
+
 
 
 
@@ -186,6 +275,7 @@
                 async:false,
                 success : function(res){
                     historyT = res.data;
+                    console.log(historyT)
                 },
                 error : function(){
                     console.log('请求失败');
@@ -197,13 +287,15 @@
         return historyT;
     }
 
+
+
     console.log(nowSource);
     var player = new Aliplayer({
             "id": "player-con",
             "source": nowSource,
             "width": "100%",
             "height": "500px",
-            "autoplay": true,
+            "autoplay": false,
             "isLive": false,
             "rePlay": false,
             "playsinline": true,
@@ -226,10 +318,87 @@
         window.location.href="http://www.gaoxi.com/playcourse.html?courseId="+courseId+"&videoId="+nowvid;
     }
 
+    var startPlay=0;
+    var recordPlayTime;
+    var isPaly=false;
+    $(".outter").eq(0).click(function () {
 
-    // setInterval(function(){
-    //   console.log(player.getCurrentTime());
-    // },1000)
+        if(!isPaly){
+            isPaly=true;
+            recordPlayTime=setInterval(playRecord,1000);
+        }else{
+            isPaly=false;
+            clearInterval(recordPlayTime);
+        }
+
+
+    })
+
+    $(".memory-play-wrap").eq(0).click(function () {
+        if(!isPaly){
+            isPaly=true;
+            recordPlayTime=setInterval(playRecord,1000);
+        }else{
+            isPaly=false;
+            clearInterval(recordPlayTime);
+        }
+    })
+
+    $(".prism-play-btn").eq(0).click(function () {
+        if(!isPaly){
+            isPaly=true;
+            recordPlayTime=setInterval(playRecord,1000);
+        }else{
+            isPaly=false;
+            clearInterval(recordPlayTime);
+        }
+    })
+
+    function playRecord(){
+        console.log(player.getCurrentTime());
+        $.ajax({
+            url : "http://www.gaoxi.com/courses/recordHistoryPos",
+            type : "POST",
+            data:{"userId":userId,"videoId":videoId,"nowpos":parseInt(player.getCurrentTime())},
+            success : function(res){
+
+            },
+            error : function(){
+                console.log('请求失败');
+            }
+        });
+
+
+
+
+
+        if($(".current-time").eq(0).text()==$(".duration").eq(0).text()){
+            if(startPlay==0){
+                clearInterval(recordPlayTime);
+                isPaly=false
+                startPlay=1;
+                //alert("完成该视频学习");
+                document.getElementsByClassName("finishStatus")[nowPlayIndex].style.display="inline";
+
+
+                $.ajax({
+                    url : "http://www.gaoxi.com/courses/recordFinishVideo",
+                    type : "POST",
+                    data:{"userId":userId,"videoId":videoId,"courseId":courseId},
+                    success : function(res){
+
+                    },
+                    error : function(){
+                        console.log('请求失败');
+                    }
+                });
+            }else{
+
+            }
+        }
+    }
+
+
 </script>
 </body>
 </html>
