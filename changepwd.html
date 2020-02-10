@@ -46,23 +46,23 @@
 <div class="container">
     <div class="row clearfix">
         <div class="col-md-offset-4 col-md-4 column">
-            <form role="form" id="userinfo">
-                <div class="form-group">
+            <form role="form" id="userpwd">
+                <div class="form-group" id="originGroup">
                     <label for="originpwd">原始密码</label>
-                    <input  id="originpwd" class="form-control" />
+                    <input type="password" v-model="originPwd" @change="checkOriginPwd" id="originpwd" class="form-control"/>
+                    <span class="help-block text-danger"  v-show="originShow">原始密码错误</span>
                 </div>
-                <div class="form-group" id="stunoformgroup">
+                <div class="form-group" id="newpwdGroup">
                     <label for="newpwd">新密码</label>
-                    <input  id="newpwd" class="form-control"  />
-                    <span class="help-block text-danger" v-show="isShow">学号不存在</span>
+                    <input type="password" v-model="newPwd"  @change="newPwdChange" id="newpwd" class="form-control"  />
+                    <span class="help-block text-danger"  v-show="newpwdShow">密码格式不正确</span>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="repeatGroup">
                     <label for="repeatpwd">重复输入</label>
-                    <input  id="repeatpwd"    class="form-control" />
+                    <input type="password" v-model="repeatPwd" @change="checkRepeat" id="repeatpwd"  class="form-control"/>
+                    <span class="help-block text-danger" v-show="repeatShow" >密码不一致</span>
                 </div>
-
-
-                <button type="button" id="modifypwd" class="btn btn-info btn-block">提交个人资料</button>
+                <button type="button" id="modifypwd" class="btn btn-info btn-block" @click="doModify">完成修改</button>
             </form>
         </div>
     </div>
@@ -77,6 +77,126 @@
     $("#commonhead").load("head.html");
     $(".white-wrapper").load("foot.html");
     $("#modal-container-912437").load("login.html");
+
+    var user_token=$.cookie("user_token");
+    if(user_token==undefined||user_token==""){
+        window.location.href="http://www.gaoxi.com/index.html";
+    }
+
+
+    var userpwd=new Vue({
+        el:"#userpwd",
+        data:{
+            originShow:false,
+            originPwd:"",
+            newPwd:"",
+            repeatPwd:"",
+            repeatShow:false,
+            newpwdShow:false
+        },
+        methods:{
+            newPwdChange:function(){
+                if(this.newPwd.length>=6&&this.newPwd.length<=10){
+                    this.newpwdShow=false;
+                    $("#newpwdGroup").removeClass("has-error")
+                    $("#newpwdGroup").addClass("has-success");
+                }else{
+                    this.newpwdShow=true;
+
+                    $("#newpwdGroup").removeClass("has-success")
+                    $("#newpwdGroup").addClass("has-error");
+                }
+            },
+            checkOriginPwd:function () {
+                var that=this;
+                $.ajax({
+                    url : "http://www.gaoxi.com/auths/profile/checkOriginPwd",
+                    type : "POST",
+                    data: {"userToken":user_token,"originPwd":that.originPwd},
+                    success : function(res){
+                        if(res.retcode=="000000"){
+                            if(res.data=="1"){
+                                //验证成功
+                                that.originShow=false;
+                                $("#originGroup").removeClass("has-error")
+                                $("#originGroup").addClass("has-success");
+
+                            }else{
+                                //验证失败
+                                that.originShow=true;
+                                $("#originGroup").removeClass("has-success")
+                                $("#originGroup").addClass("has-error");
+                            }
+                        }else{
+                            swal({
+                                title: "温馨提示",
+                                text: "身份验证已过期" ,
+                                icon: "error",
+                                button:"好的"
+                            })
+                        }
+
+
+                    },
+                    error : function(){
+                        alert('请求失败');
+                    }
+                });
+
+
+            },
+            checkRepeat:function () {
+                if(this.repeatPwd!=this.newPwd){
+                    this.repeatShow=true;
+                    $("#repeatGroup").removeClass("has-success");
+                    $("#repeatGroup").addClass("has-error");
+                }else{
+                    this.repeatShow=false;
+                    $("#repeatGroup").removeClass("has-error");
+                    $("#repeatGroup").addClass("has-success");
+                }
+
+            },
+            doModify:function () {
+                if(!this.originShow&&!this.newpwdShow&&!this.repeatShow&this.newPwd!=""&&this.repeatPwd!="") {
+                    var that=this;
+                    $.ajax({
+                        url : "http://www.gaoxi.com/auths/profile/changeOriginPwd",
+                        type : "POST",
+                        data: {"userToken":user_token,"newPwd":that.newPwd},
+                        success : function(res){
+                            if(res.retcode=="000000"){
+                                swal({
+                                    title: "温馨提示",
+                                    text: "修改成功" ,
+                                    icon: "success",
+                                    button:"好的"
+                                })
+                                that.newPwd="";
+                                that.originPwd="";
+                                that.repeatPwd="";
+                            }else{
+                                swal({
+                                    title: "温馨提示",
+                                    text: "身份验证已过期" ,
+                                    icon: "error",
+                                    button:"好的"
+                                })
+                            }
+                        },
+                        error : function(){
+                            alert('请求失败');
+                        }
+                    });
+
+                }
+            }
+        }
+
+    })
+
+
+
 
     $(function () {
         //暂时未完工

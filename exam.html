@@ -336,6 +336,7 @@
                     </div>
                     <!--交卷按钮-->
                     <button type="button" id="submitPaper" class="btn btn-block btn-success btn-default" @click="doSubmitExam">提交试卷</button>
+                    <a style="display: none" id="rankLink" href="https://www.baidu.com" class="btn btn-block btn-success btn-default">查看考试排名</a>
                 </div>
             </div>
         </div>
@@ -363,6 +364,7 @@
     //答题模式页面
     $("#navhref").attr("href", "subjectwelcom.html?ctype=" + ctype);
 
+    $("#rankLink").attr("href","ranklist.html?ctype="+ctype);
 
     //************ 用户信息**********
     var user_token=$.cookie("user_token");
@@ -628,6 +630,11 @@
                 console.log('请求失败');
             }
         });
+
+        $("#submitPaper").hide();
+        $("#rankLink").show();
+
+
     }
 
     //提交试卷之后题号的颜色

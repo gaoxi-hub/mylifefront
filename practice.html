@@ -18,6 +18,16 @@
     <link rel="stylesheet" href="./css/star1/normalize.css">
     <!-- <link rel="stylesheet" href="./css/star1/demo.css">-->
     <link rel="stylesheet" href="css/star1/mystar.css">
+    <!--评论区-->
+    <link rel="stylesheet" href="css/pldir/pl.css">
+    <!--评分-->
+    <link rel="stylesheet" href="css/pldir/plstar.css">
+    <link rel="stylesheet" type="text/css" href="./css/page/zxf_page.css">
+    <!--开关-->
+    <link rel="stylesheet" type="text/css" href="./css/switcher/checkboxes.min.css">
+
+
+
 
     <!--vue.js-->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -27,6 +37,13 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="js/echarts.js"></script>
+
+    <script src="js/starjs/starScore.js"></script>
+    <script type="text/javascript" src="./js/page/zxf_page.js"></script>
+
+    <!--switch-->
+
+
 
     <style>
         .tnum{
@@ -163,6 +180,16 @@
                         <div class="col-md-6">
                             <button class="btn btn-info" @click="preT">上一题</button>
                             <button class="btn btn-info" @click="nextT">下一题</button>
+
+
+                                <div class="ckbx-style-9 pull-right" >
+                                    <input type="checkbox" id="ckbx-style-9-1" value="0" name="ckbx-style-9">
+                                    <label for="ckbx-style-9-1" onclick="changeAuto()"></label>
+                                </div>
+
+                                <span class="pull-right" style="margin-right: 10px">答对自动下一题</span>
+
+
                         </div>
                         <!-- -->
                         <div class="col-md-6">
@@ -209,6 +236,105 @@
 
                 </div>
             </div>
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        评论区
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div  id="panel-pinlun">
+                        <!--评论面板-->
+                        <div id="qq">
+                            <p>写下对课程的评论吧!!!</p>
+                            <div id="starttwo" style="overflow: hidden;margin-top: -12px">
+                                <div class="star_score"></div>
+                                <p style="float:left;">您的评分：<span class="fenshu">0</span> 分</p>
+                            </div>
+                            <div class="message" contenteditable="true"></div>
+                            <!-- 表情栏触发按钮 -->
+                            <div class="But">
+                                <img src="./img/plface/bba_thumb.gif" class="bq">
+                                <!-- 发表按钮 -->
+                                <span class="submit">发表</span>
+
+                                <!-- 表情栏 -->
+                                <div class="face" style="display: none;">
+                                    <ul>
+                                        <li><img src="./img/plface/smilea_thumb.gif" title="[呵呵]"></li>
+                                        <li><img src="./img/plface/tootha_thumb.gif" title="[嘻嘻]"></li>
+                                        <li><img src="./img/plface/laugh.gif" title="[哈哈]"></li>
+                                        <li><img src="./img/plface/tza_thumb.gif" title="[可爱]"></li>
+                                        <li><img src="./img/plface/kl_thumb.gif" title="[可怜]"></li>
+                                        <li><img src="./img/plface/kbsa_thumb.gif" title="[挖鼻屎]"></li>
+                                        <li><img src="./img/plface/cj_thumb.gif" title="[吃惊]"></li>
+                                        <li><img src="./img/plface/shamea_thumb.gif" title="[害羞]"></li>
+                                        <li><img src="./img/plface/zy_thumb.gif" title="[挤眼]"></li>
+                                        <li><img src="./img/plface/bz_thumb.gif" title="[闭嘴]"></li>
+                                        <li><img src="./img/plface/bs2_thumb.gif" title="[鄙视]"></li>
+                                        <li><img src="./img/plface/lovea_thumb.gif" title="[爱你]"></li>
+                                        <li><img src="./img/plface/sada_thumb.gif" title="[泪]"></li>
+                                        <li><img src="./img/plface/heia_thumb.gif" title="[偷笑]"></li>
+                                        <li><img src="./img/plface/qq_thumb.gif" title="[亲亲]"></li>
+                                        <li><img src="./img/plface/sb_thumb.gif" title="[生病]"></li>
+                                        <li><img src="./img/plface/mb_thumb.gif" title="[太开心]"></li>
+                                        <li><img src="./img/plface/ldln_thumb.gif" title="[懒得理你]"></li>
+                                        <li><img src="./img/plface/yhh_thumb.gif" title="[右哼哼]"></li>
+                                        <li><img src="./img/plface/zhh_thumb.gif" title="[左哼哼]"></li>
+                                        <li><img src="./img/plface/x_thumb.gif" title="[嘘]"></li>
+                                        <li><img src="./img/plface/cry.gif" title="[衰]"></li>
+                                        <li><img src="./img/plface/wq_thumb.gif" title="[委屈]"></li>
+                                        <li><img src="./img/plface/t_thumb.gif" title="[吐]"></li>
+                                        <li><img src="./img/plface/k_thumb.gif" title="[打哈气]"></li>
+                                        <li><img src="./img/plface/bba_thumb.gif" title="[抱抱]"></li>
+                                        <li><img src="./img/plface/angrya_thumb.gif" title="[怒]"></li>
+                                        <li><img src="./img/plface/yw_thumb.gif" title="[疑问]"></li>
+                                        <li><img src="./img/plface/cza_thumb.gif" title="[馋嘴]"></li>
+                                        <li><img src="./img/plface/88_thumb.gif" title="[拜拜]"></li>
+                                        <li><img src="./img/plface/sk_thumb.gif" title="[思考]"></li>
+                                        <li><img src="./img/plface/sweata_thumb.gif" title="[汗]"></li>
+                                        <li><img src="./img/plface/sleepya_thumb.gif" title="[困]"></li>
+                                        <li><img src="./img/plface/sleepa_thumb.gif" title="[睡觉]"></li>
+                                        <li><img src="./img/plface/money_thumb.gif" title="[钱]"></li>
+                                        <li><img src="./img/plface/sw_thumb.gif" title="[失望]"></li>
+                                        <li><img src="./img/plface/cool_thumb.gif" title="[酷]"></li>
+                                        <li><img src="./img/plface/hsa_thumb.gif" title="[花心]"></li>
+                                        <li><img src="./img/plface/hatea_thumb.gif" title="[哼]"></li>
+                                        <li><img src="./img/plface/gza_thumb.gif" title="[鼓掌]"></li>
+                                        <li><img src="./img/plface/dizzya_thumb.gif" title="[晕]"></li>
+                                        <li><img src="./img/plface/bs_thumb.gif" title="[悲伤]"></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="msgCon"></div>
+
+                        <!--分页插件-->
+                        <div class="zxf_pagediv">
+                            <a href="javascript:;" class="prebtn">上一页</a>
+                            <a href="javascript:;" class="zxfPagenum">1</a>
+                            <a href="javascript:;" class="zxfPagenum">2</a>
+                            <span>...</span><a href="javascript:;" class="zxfPagenum">4</a>
+                            <a href="javascript:;" class="zxfPagenum">5</a>
+                            <span class="current">6</span>
+                            <a href="javascript:;" class="zxfPagenum nextpage">7</a>
+                            <a href="javascript:;" class="zxfPagenum">8</a><span>...</span>
+                            <a href="javascript:;" class="nextbtn">下一页</a><span>共<b>20</b>页</span>
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="panel-footer">
+                    good luck;
+                </div>
+            </div>
+
+
+
         </div>
     </div>
 </div>
@@ -258,6 +384,13 @@
     }
 
 
+    var autoNext=false;
+    var clickTimes=0;
+    function changeAuto() {
+        autoNext=!autoNext;
+        console.log(autoNext)
+    }
+
     //当前所在题目,答题卡号的颜色值记录  "#00FFFF",#00FF00,"#FF0000"
     var nowTColor = "";
 
@@ -271,8 +404,8 @@
             mShow: false,
             jShow: false,
             nowIndex: 0,
-            isShowTnum: true,
-            isShowAna:true,
+            isShowTnum: false,
+            isShowAna:false,
             subjectinfo: {
                 tstem: "初始化题干",
                 toptionA: "选项A",
@@ -369,6 +502,15 @@
                             .addClass("checkbox-info");
                         $("#m_option"+trueAns.charAt(i)).prop("checked",true);
                     }
+
+                    //自动下一题
+                    if(canNext(trueAns,mans)){
+                        this.nextT();
+                    }
+
+
+
+
                 }
             },
             //做单项选择题监听
@@ -409,6 +551,12 @@
                    $("#radio"+trueAns).prop("checked",true);
                    $("#jradio"+trueAns).prop("checked",true);
                    //自动下一题
+                   if(canNext(trueAns,$hasOpted.val())){
+                       this.nextT();
+                   }
+
+
+
                }else {
                    // 虽然有点击事件,但是不是选的
                    return;
@@ -487,11 +635,38 @@
                     console.log('请求失败');
                 }
             });
+
+            //获取 首题的评论
+            $.ajax({
+                url: "http://www.gaoxi.com/subjects/getSubjectRemarkList",
+                type: "post",
+                data: {"tId": that.alltid[that.nowIndex]},
+                async: false,
+                success: function (res) {
+                    console.log(res);
+                    //获取评论数据
+
+                    innerHTMl(res.data)
+                    refreshPageContent();
+                },
+                error: function () {
+                    console.log('请求失败');
+                }
+            });
+
         }
     })
 
     document.getElementsByClassName('tnum')[0].style.backgroundColor = "#00FFFF";
 
+
+    function canNext(trueAns,myAns) {
+        if(trueAns==myAns && autoNext){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     //添加题号的active
     function changeTnumStatus(nowi, willi) {
@@ -534,6 +709,28 @@
                 console.log('请求失败');
             }
         });
+
+        //更换题目.......
+        $.ajax({
+            url: "http://www.gaoxi.com/subjects/getSubjectRemarkList",
+            type: "post",
+            data: {"tId": that.alltid[that.nowIndex]},
+            async: false,
+            success: function (res) {
+                console.log(res);
+                //获取评论数据
+                $(".msgCon").html("");
+                innerHTMl(res.data);
+                refreshPageContent();
+            },
+            error: function () {
+                console.log('请求失败');
+            }
+        });
+
+
+
+
     }
 
 
@@ -600,6 +797,194 @@
         // Disabled评分条
         $("#demo9 .ratyli").ratyli({disable: true});
     })
+
+    //评论区
+    //从缓存中获取数据并渲染
+    //let msgBoxList = JSON.parse(window.localStorage.getItem('msgBoxList')) || [];
+    //从后台ajax获取
+
+
+
+    //点击小图片，显示表情
+    $(".bq").click(function (e) {
+        $(".face").slideDown(); //慢慢向下展开
+        e.stopPropagation(); //阻止冒泡事件
+    });
+
+    //在桌面任意地方点击，关闭表情框
+    $(document).click(function () {
+        $(".face").slideUp(); //慢慢向上收
+    });
+
+
+    //点击小图标时，添加功能
+    $(".face ul li").click(function () {
+        let simg = $(this).find("img").clone();
+        $(".message").append(simg); //将表情添加到输入框
+    });
+
+
+    //点击发表按扭，发表内容
+    $("span.submit").click(function () {
+        let txt = $(".message").html(); //获取输入框内容
+        //若没有文字自动获取提示输入
+        if (!txt) {
+            $('.message').focus(); //自动获取焦点
+            return;
+        }
+
+
+        let obj = {
+            msg: txt
+        }
+
+        console.log("======"+timupanel.alltid[timupanel.nowIndex])
+        //后台添加评论 ，成功后显示
+        var user_token = $.cookie("user_token");
+        if (user_token == undefined || user_token == '') {
+            swal({
+                title: "提示",
+                text: "请先登录，再发表评论",
+                icon: "error"
+            });
+            return false;
+        }
+
+        $.ajax({
+            url: "http://www.gaoxi.com/subjects/addSubjectRemark",
+            type: "post",
+            data: {"tId": timupanel.alltid[timupanel.nowIndex], "userToken": user_token, "remark": txt, "score": $(".fenshu").eq(0).text()},
+            async: false,
+            success: function (res) {
+                if (res.retcode = "000000") {
+                    innerHTMl([res.data]) //渲染当前输入框内容
+                    $('.message').html('') // 清空输入框
+                    //清空星星
+                    $(".star_score > a").removeClass("clibg");
+                    console.log($(".star_score > a"));
+                    $(".fenshu").eq(0).text(0);
+                    refreshPageContent();
+
+
+                } else {
+                    swal({
+                        title: "提示",
+                        text: "请刷新页面，检查登录状态",
+                        icon: "error"
+                    });
+
+                }
+            },
+            error: function () {
+                console.log('请求失败');
+            }
+        });
+    });
+
+
+    //删除当前数据
+    // $("body").on('click', '.del', function () {
+    //     let index = $(this).parent().parent().index();
+    //     msgBoxList.splice(index, 1)
+    //     window.localStorage.setItem('msgBoxList', JSON.stringify(msgBoxList)) //将数据保存到缓存
+    //     $(this).parent().parent().remove()
+    // })
+
+
+    //渲染html
+    function innerHTMl(List) {
+        List = List || []
+        List.forEach(item => {
+            console.log(item);
+            let str =
+                `<div class='msgBox'>
+						<div class="headUrl">
+							<img src='${item.userImg}' width='50' height='50'/>
+							<div>
+								<span class="title">${item.userName}</span>
+								    <div class="atar_Show">
+                                      <p tip="${item.tpScore}" class="starnum"></p>
+                                     </div>
+                             <span class="time">${item.tpTime}</span>
+							</div>
+
+						</div>
+						<div class='msgTxt'>
+							${item.tpContent}
+						</div>
+					</div>`
+            $(".msgCon").prepend(str);
+        })
+        showRemarkStar();
+    }
+
+    /*star*/
+    scoreFun($("#starttwo"), {
+        fen_d: 22,//每一个a的宽度
+        ScoreGrade: 5//a的个数5
+    });
+
+    //显示分数
+    function showRemarkStar() {
+        $(".starnum").each(function (index, element) {
+            var num = $(this).attr("tip");
+            var www = num * 22;//
+            $(this).css("width", www);
+        });
+    }
+
+    $(".fenshu").eq(0).text(0);
+
+
+    function refreshPageContent() {
+        var totalRemarks = $(".msgBox").length;
+        console.log(totalRemarks);
+        $(".msgBox").hide();
+
+        for (var i = 0; i < 5; i++) {
+            if (i == totalRemarks) {
+                break;
+            } else {
+                $(".msgBox").eq(i).show();
+            }
+        }
+
+        var pagenum = 0;
+        if (parseInt(totalRemarks / 5) == totalRemarks / 5) {
+            pagenum = parseInt(totalRemarks / 5);
+        } else {
+            pagenum = parseInt(totalRemarks / 5) + 1
+        }
+        //翻页 每页显示6个数据
+        $(".zxf_pagediv").createPage({
+            pageNum: pagenum,
+            current: 1,
+            backfun: function (e) {
+                console.log(e);
+                var cur = e.current;
+                var start = (cur - 1) * 5;
+                $(".msgBox").hide();
+
+                for (var i = start; i < start + 5; i++) {
+                    if (i == totalRemarks) {
+                        break;
+                    } else {
+                        $(".msgBox").eq(i).show();
+                    }
+                }
+
+
+            }
+        });
+    }
+
+   // refreshPageContent();
+
+
+
+
+
+
 </script>
 </body>
 </html>

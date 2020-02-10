@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>徐州工程学院思政课学习管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="css/common.css">
+    <!--验证码css-->
+    <link rel="stylesheet" href="css/verify.css">
+
+    <!--vue.js-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!--必须使用这款jquery 2.x-->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.cookie.js"></script>
+    <script src="js/jquery.timers.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="js/echarts.js"></script>
+
+    <style>
+        .rank-list {
+            list-style: none;
+        }
+
+        .rank-item {
+            overflow: hidden;
+            padding: 5px;
+        }
+
+        .rank-item div {
+            float: left;
+        }
+
+        .rank-item .rank-num {
+            width: 10%;
+
+            padding: 10px;
+        }
+
+        .rank-item .rank-img {
+            width: 30%;
+        }
+
+        .rank-img > img {
+            border-radius: 50%;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            width: 40px;
+            height: 40px;
+        }
+
+        .rank-img > span {
+            color: #00c1de;
+        }
+
+        .rank-item .rank-score {
+            width: 15%;
+            padding: 10px;
+            color: #f90;;
+        }
+
+        .rank-item .rank-time {
+            width: 45%;
+            padding: 10px;
+            color: #00dd9a;
+        }
+
+
+    </style>
+
+</head>
+<body>
+<div class="navbar navbar-inverse" id="commonhead"></div>
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="index.html">主页</a>
+                </li>
+                <li class="active">
+                    个人信息管理
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--排行+统计 -->
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-6 column">
+            <!--排行榜-->
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        排行榜前十
+                    </h3>
+                </div>
+                <div class="panel-body" id="rankVue">
+                    <ul class="rank-list">
+                        <li class="rank-item" v-for="(item,index) in rankList">
+                            <div class="rank-num">
+                                <span class="label label-default indexspan">{{index+1}}</span>
+                            </div>
+                            <div class="rank-img">
+                                <img :src="item.userImg" class="img-circle">
+                                <span>{{item.userName}}</span>
+                            </div>
+                            <div class="rank-score">
+                                {{item.score}}分
+                            </div>
+                            <div class="rank-time" v-text="timeText(item.useTime)">
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="col-md-6 column">
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        统计
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div id="rankEcharts" style="height: 270px;"></div>
+                </div>
+                <div class="panel-footer">
+                    Apache 统计图表
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div style="height: 50px;"></div>
+<footer class="white-wrapper"></footer>
+<!--登录注册模态框-->
+<div class="modal fade" id="modal-container-912437" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+</div>
+<script>
+    $("#commonhead").load("head.html");
+    $(".white-wrapper").load("foot.html");
+    $("#modal-container-912437").load("login.html");
+    var nowUrl = window.location.href;
+    var ctype = nowUrl.split("?")[1].split("=")[1];
+
+    var rankVue = new Vue({
+        el: "#rankVue",
+        data: {
+            rankList: [
+                {
+                    userImg: "img/vuelogo.jpg",
+                    userName: "高溪",
+                    score: 90,
+                    useTime: 1000
+                },
+                {
+                    userImg: "img/vuelogo.jpg",
+                    userName: "高溪",
+                    score: 90,
+                    useTime: 1000
+                },
+                {
+                    userImg: "img/vuelogo.jpg",
+                    userName: "高溪",
+                    score: 90,
+                    useTime: 1000
+                },
+                {
+                    userImg: "img/vuelogo.jpg",
+                    userName: "高溪",
+                    score: 90,
+                    useTime: 1000
+                }, {
+                    userImg: "img/vuelogo.jpg",
+                    userName: "高溪",
+                    score: 90,
+                    useTime: 1000
+                }, {
+                    userImg: "img/vuelogo.jpg",
+                    userName: "高溪",
+                    score: 90,
+                    useTime: 1000
+                },
+                {
+                    userImg: "img/vuelogo.jpg",
+                    userName: "高溪",
+                    score: 90,
+                    useTime: 1000
+                },
+                {
+                    userImg: "img/vuelogo.jpg",
+                    userName: "高溪",
+                    score: 90,
+                    useTime: 1000
+                },
+                {
+                    userImg: "img/vuelogo.jpg",
+                    userName: "高溪",
+                    score: 90,
+                    useTime: 1000
+                }
+            ]
+        },
+        created: function () {
+            var that=this;
+            $.ajax({
+                url: "http://www.gaoxi.com/subjects/getExamRankList",
+                type: "GET",
+                data: {"cType": ctype},
+                async:false,
+                success: function (res) {
+                    that.rankList=res.data;
+                },
+                error: function () {
+                    console.log('请求失败');
+                }
+            });
+
+
+        },
+        methods: {
+            timeText: function (tTime) {
+                var minute = parseInt(tTime / 60);
+                var sec = tTime % 60;
+                if (sec == 0) {
+                    return minute + "分";
+                } else {
+                    return minute + "分" + sec + "秒";
+                }
+            }
+        }
+
+    })
+
+
+    $(function () {
+        $(".indexspan").eq(0).removeClass("label-default").addClass("label-danger");
+
+        $(".indexspan").eq(1).removeClass("label-default").addClass("label-success");
+
+        $(".indexspan").eq(2).removeClass("label-default").addClass("label-info");
+
+
+
+        var rankEcharts = echarts.init(document.getElementById('rankEcharts'));
+        //学习进度统计;
+        var option = {
+            color: ['#3398DB'],
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                    type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    data: ['小于5分钟', '5分钟~10分钟', '10分钟~20分钟', '20~30分钟', '大于30分钟'],
+                    axisTick: {
+                        alignWithLabel: true
+                    }
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value'
+                }
+            ],
+            series: [
+                {
+                    name: '直接访问',
+                    type: 'bar',
+                    barWidth: '50%',
+                    data: [10, 52, 200, 334, 390]
+                }
+            ]
+        };
+        rankEcharts.setOption(option);
+        //异步请求代码
+
+
+        //***********
+
+
+        //暂时未完工
+        /*必须加上这一句不然tooltip无效果*/
+        $("[data-toggle='tooltip']").tooltip();
+    });
+</script>
+</body>
+</html>

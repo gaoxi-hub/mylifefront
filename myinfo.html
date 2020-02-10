@@ -216,7 +216,7 @@
                 } else{
                     var user_token=$.cookie("user_token");
                     var that=this;
-                    var requestData={"userId":this.uId,"userStuno":this.stuno,"userImg":this.uimg};
+                    var requestData={"userId":this.uId,"userStuno":this.stuno,"userImg":this.uimg,"userName":this.uname};
                     console.log(requestData);
                     var data=JSON.stringify(requestData);
                     $.ajax({

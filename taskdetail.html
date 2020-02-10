@@ -113,7 +113,7 @@
                                 <input type="hidden"  name="taskId" v-bind:value="tId">
                                 <input type="file" name="file">
                             </form>
-                           <button  class="btn btn-success pull-right"  onclick="submitWork()">{{taskInfo.personalStatus=='0'?'提交我的作业':'重新提交我的作业'}}
+                           <button id="submitBtnFile" class="btn btn-success pull-right"  onclick="submitWork()">{{taskInfo.personalStatus=='0'?'提交我的作业':'重新提交我的作业'}}
                            </button> </div>
                     </div>
                 </div>
@@ -320,10 +320,13 @@
             }else {
                 swal({
                     title: "温馨提示",
-                    text: "时间到自动交卷",
+                    text: "任务已经截止",
                     icon: "warning",
                     button: "我知道了"
                 })
+
+                $("#submitBtnFile").text("已结束");
+                $("#submitBtnFile").addClass("disabled");
 
             }
         });
