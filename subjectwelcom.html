@@ -177,7 +177,7 @@
                     <div id="learnrate" style="height:400px"></div>
                 </div>
                 <div class="panel-footer">
-                    Echarts图表支持
+                    Echarts图表支持:答错数量:只要用户做错过该题，该题将归入答错数量
                 </div>
             </div>
         </div>
@@ -221,7 +221,7 @@
              legend: {
                  orient: 'vertical',
                  left: 'left',
-                 data: ['答对', '答错', '未做']
+                 data: ['答对', '答错', '未作答']
              },
              color:['#008000', '#FF0000','#808080'],
              series: [
@@ -231,9 +231,7 @@
                      radius: '55%',
                      center: ['50%', '60%'],
                      data: [
-                         {value: 335, name: '答对'},
-                         {value: 310, name: '答错'},
-                         {value: 234, name: '未做'}
+                         {value: 999, name: '未登录'}
                      ],
                      emphasis: {
                          itemStyle: {
@@ -250,7 +248,7 @@
          var user_token=$.cookie("user_token");
          if(user_token!=undefined&&user_token!=''){
              $.ajax({
-                 url : "http://www.gaoxi.com/courses/getUserDoSubjectStatus",
+                 url : "http://www.gaoxi.com/subjects/getUserDoSubjectStatus",
                  type : "GET",
                  data:{"ctype":ctype,"userToken":user_token},
                  async:false,

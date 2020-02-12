@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>徐州工程学院思政课学习管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="css/common.css">
+    <!--验证码css-->
+    <link rel="stylesheet" href="css/verify.css">
+    <link rel="stylesheet" href="css/bootstrap-table.css">
+
+    <link rel="stylesheet" href="css/search/home.css">
+
+
+
+    <!--vue.js-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!--必须使用这款jquery 2.x-->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.cookie.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="js/bootstrap-table.min.js"></script>
+    <script src="js/bootstrap-table-locale-all.js"></script>
+    <script src="js/bootstrap-table-zh-CN.js"></script>
+
+</head>
+<body>
+<div class="navbar navbar-inverse" id="commonhead"></div>
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="index.html">主页</a>
+                </li>
+                <li class="active">
+                    题目检索
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="aui-wrapper-header">
+                <form action="">
+                    <input type="text" id="tKey" class="aui-wrapper-input">
+                    <input type="button" id="doSearch" class="aui-wrapper-submit" value="检索题目">
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row clearfix">
+
+        <div class="col-md-12 column">
+
+            <table id="table"
+                   data-toggle="table"
+                   data-pagination="true"
+                   data-page-size="20"
+                   data-search="true"
+                   data-show-toggle="true"
+                   data-show-fullscreen="true"
+                   data-click-to-select="true"
+                   >
+                <thead>
+                <tr>
+                    <th data-field="tid">题目编号</th>
+                    <th data-field="tstem">题干</th>
+                    <th data-field="toptionA">选项A</th>
+                    <th data-field="toptionB">选项B</th>
+                    <th data-field="toptionC">选项C</th>
+                    <th data-field="toptionD">选项D</th>
+                    <th data-field="toptionE">选项E</th>
+                    <th data-field="tanswer" data-formatter="timuAns">答案</th>
+                    <th data-field="ttype" data-formatter="timuType">题目类型</th>
+                    <th data-field="tcourse" data-formatter="timuCourse">所属课程</th>
+                    <th data-field="tchapter">章节</th>
+                </tr>
+                </thead>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<span class="label label-primary"></span>
+
+
+<div style="height: 50px;"></div>
+<footer class="white-wrapper"></footer>
+<!--登录注册模态框-->
+<div class="modal fade" id="modal-container-912437" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+</div>
+<script>
+    $("#commonhead").load("head.html");
+    $(".white-wrapper").load("foot.html");
+    $("#modal-container-912437").load("login.html");
+
+
+    function timuAns(value, row, index) {
+        if(row.ttype=='J'){
+            if(value=="A"){
+                return "对"
+            }else{
+                return "错误"
+            }
+        }else{
+            return value;
+        }
+
+    }
+
+
+    function timuType(value, row, index){
+        if(value=="S"){
+            return '<span class="label label-primary">单选题</span>'
+        }else if(value=="M"){
+            return '<span class="label label-warning">多选题</span>'
+        }else{
+            return '<span class="label label-danger">判断题</span>'
+        }
+    }
+
+    function timuCourse(value, row, index){
+        if(value==1){
+            return '<span class="label label-info">马原</span>'
+        }else if(value==2){
+            return '<span class="label label-warning">思修</span>'
+        }else if(value==3){
+            return '<span class="label label-danger">近代史</span>'
+        }else{
+            return '<span class="label label-success">毛概</span>'
+        }
+    }
+
+
+
+
+    $("#doSearch").click(function () {
+
+        var searchItem=$("#tKey").val();
+        if(searchItem==undefined||searchItem==""){
+            swal({
+                title: "提示",
+                text: "请输入内容",
+                icon: "error",
+                button:"好的"
+            });
+            return;
+        }
+
+        console.log(searchItem);
+        $.ajax({
+            url : "http://www.gaoxi.com/subjects/esSearchSubject",
+            type : "POST",
+            data: {"keyWord":searchItem},
+            success : function(res){
+                if(res.retcode=="000000"){
+
+                    $("#table").bootstrapTable('load',res.data);
+                }else{
+                    swal({
+                        title: "提示",
+                        text: "未查询到结果",
+                        icon: "error",
+                        button:"好的"
+                    });
+                }
+            },
+            error : function(){
+                alert('请求失败');
+            }
+        });
+    })
+
+
+
+
+
+
+
+
+    $(function () {
+
+
+        /*必须加上这一句不然tooltip无效果*/
+        $("[data-toggle='tooltip']").tooltip();
+    });
+</script>
+</body>
+</html>

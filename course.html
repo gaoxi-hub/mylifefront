@@ -300,37 +300,48 @@
                         });
                         return;
                     }
-                    $.ajax({
-                        url: "http://www.gaoxi.com/courses/addToMyLearnList",
-                        type: "GET",
-                        data: {"cId": courseId, "userToken": user_token},
-                        async: false,
-                        success: function (res) {
-                            if (res.retcode == '000000') {
-                                that.btnEnable = true;
+                    console.log(this.headInfo.courseType);
 
-                                swal({
-                                    title: "温馨提示",
-                                    text: "添加成功快开始学习吧",
-                                    icon: "success",
-                                    button: "我知道了"
-                                }).then((value) => {
-                                    window.location.href = "http://www.gaoxi.com/course.html?courseId=" + courseId;
-                                });
-                            } else {
-                                swal({
-                                    title: "温馨提示",
-                                    text: "您还没有登录",
-                                    icon: "error",
-                                    button: "我知道了"
-                                });
+                    //跳转到支付页面
+                    if(this.headInfo.courseType!=0){
+                        window.location.href="http://www.gaoxi.com/courses/goAliPay?userToken="+user_token+"&courseId="+courseId;
+
+                    }else{
+                        $.ajax({
+                            url: "http://www.gaoxi.com/courses/addToMyLearnList",
+                            type: "GET",
+                            data: {"cId": courseId, "userToken": user_token},
+                            async: false,
+                            success: function (res) {
+                                if (res.retcode == '000000') {
+                                    that.btnEnable = true;
+
+                                    swal({
+                                        title: "温馨提示",
+                                        text: "添加成功快开始学习吧",
+                                        icon: "success",
+                                        button: "我知道了"
+                                    }).then((value) => {
+                                        window.location.href = "http://www.gaoxi.com/course.html?courseId=" + courseId;
+                                    });
+                                } else {
+                                    swal({
+                                        title: "温馨提示",
+                                        text: "您还没有登录",
+                                        icon: "error",
+                                        button: "我知道了"
+                                    });
+                                }
+
+                            },
+                            error: function () {
+                                console.log('请求失败');
                             }
+                        });
+                    }
 
-                        },
-                        error: function () {
-                            console.log('请求失败');
-                        }
-                    });
+
+
                 }
             }
         })

@@ -95,9 +95,9 @@
 
                 <form class="navbar-form navbar-right" role="search">
                     <div class="form-group">
-                        <input type="text" class="form-control" />
+                        <input type="text" id="keyWord" class="form-control" />
                     </div>
-                    <button type="submit" class="btn btn-default">搜索</button>
+                    <button type="button" id="doSearch" class="btn btn-danger">搜索</button>
                 </form>
             </ul>
         </div>
@@ -147,11 +147,11 @@
          '                        <img alt="300x200" \n'  +
          '                             v-bind:src="videoinfo.videoImg"/>\n' +
          '                        <div class="caption">\n' +
-         '                            <h4 v-text="videoinfo.videoName">\n' +
+         '                            <h4 v-html="videoinfo.videoName">\n' +
          '                                \n' +
          '                            </h4>\n' +
-         '                            <p data-toggle="tooltip" data-placement="bottom" v-bind:title="videoinfo.videointro" v-text="videoinfo.videointro">\n' +
-         '                            </p>\n' +
+         '                            <p data-toggle="tooltip" data-placement="bottom"  v-html="videoinfo.videointro">\n' +
+         '                            </p><small>作者:</small><small v-html="videoinfo.videoAuth"></small>\n' +
          '                            <p class="text-right">\n' +
          '                                <a class="btn btn-primary" v-bind:href="`http://www.gaoxi.com/course.html?courseId=${videoinfo.videoUrl}`">立即学习</a>\n' +
          '                            </p>\n' +
@@ -163,11 +163,15 @@
 
 
      var nowurl=window.location.href;
+     console.log(nowurl);
      var args=nowurl.split("?")[1].split("&");
 
      var nowPage=args[0].split("=")[1];
      var everyPageDataNum=args[1].split("=")[1];
      var filterOp=args[2].split("=")[1];
+     var searchType=args[3].split("=")[1];
+
+
 
      //1.根据url中的内容设置单选，多选框内容
      $(".courseList").prop("checked", false);
@@ -213,31 +217,78 @@
          },
          onPageClicked: function(event, originalEvent, type, page) {
              //用户点击翻页，此时的筛选状态没有变
-             window.location.href="http://www.gaoxi.com/courselist.html?page="+page+"&num="+everyPageDataNum+"&filterOp="+filterOp;
+             window.location.href="http://www.gaoxi.com/courselist.html?page="+page+"&num="+everyPageDataNum+"&filterOp="+filterOp+"&searchType="+searchType;
          }
      });
 
-     $.ajax({
-         url : "http://www.gaoxi.com/courses/getCourseList",
-         type : "GET",
-         data:{"page":nowPage,"size":everyPageDataNum,"filterOp":filterOp},
-         async:false,
-         success : function(res){
-             //获取得了   count总数据条数,   本页的数据,
-             //1.计算totalPage
-             var totalPage=Math.ceil(res.data.count/everyPageDataNum);
-             //本页数据
-             nowListInfo=res.data.dataList;
-             //设置总页数
-             $('#pageLimit').bootstrapPaginator({
-                 totalPages: totalPage,//一共多少页。
-                 currentPage:nowPage //当前的页码
-             })
-         },
-         error : function(){
-             console.log('请求失败');
-         }
-     });
+     if(searchType==1){
+         $.ajax({
+             url : "http://www.gaoxi.com/courses/getCourseList",
+             type : "GET",
+             data:{"page":nowPage,"size":everyPageDataNum,"filterOp": filterOp},
+             async:false,
+             success : function(res){
+
+                 //获取得了   count总数据条数,   本页的数据,
+                 //1.计算totalPage
+                 var totalPage=Math.ceil(res.data.count/everyPageDataNum);
+                 //本页数据
+                 nowListInfo=res.data.dataList;
+                 //设置总页数
+                 $('#pageLimit').bootstrapPaginator({
+                     totalPages: totalPage,//一共多少页。
+                     currentPage:nowPage //当前的页码
+                 })
+             },
+             error : function(){
+                 console.log('请求失败');
+             }
+         });
+
+     }else{
+         console.log()
+         //elasticSearch搜索
+         $.ajax({
+             url : "http://www.gaoxi.com/courses/videoSearch",
+             type : "GET",
+             data:{"page":nowPage,"size":everyPageDataNum,"filterOp":decodeURI(filterOp)},
+             async:false,
+             success : function(res){
+                 //获取得了   count总数据条数,   本页的数据,
+                 if(res.retcode!="000000")
+                 {
+                     swal({
+                         title: "温馨提示",
+                         text: "无查询结果",
+                         icon: "error",
+                         button: "好的"
+                     }).then((value) => {
+                         window.location.href="http://www.gaoxi.com/courselist.html?page=1&num=12&filterOp=1-2-3-4-5&searchType=1";
+                     });
+
+                 }else{
+                     //1.计算totalPage
+                     var totalPage=Math.ceil(res.data.count/everyPageDataNum);
+                     //本页数据
+                     nowListInfo=res.data.dataList;
+                     console.log(nowListInfo);
+                     //设置总页数
+                     $('#pageLimit').bootstrapPaginator({
+                         totalPages: totalPage,//一共多少页。
+                         currentPage:nowPage //当前的页码
+                     })
+                 }
+
+             },
+             error : function(){
+                 console.log('请求失败');
+             }
+         });
+     }
+
+
+
+
 
 
      //数据渲染到页面上
@@ -254,8 +305,31 @@
      })
 
 
-    //若是用点击了筛选按钮
+     //若是点击了搜索按钮
+     $("#doSearch").click(function () {
+         //拼接过滤条件
+         var tfilterOp="";
+         tfilterOp=$("#keyWord").val();
+         if(tfilterOp==undefined||tfilterOp==""){
+             swal({
+                 title: "温馨提示",
+                 text: "请输入搜索关键字",
+                 icon: "error",
+                 button: "好的"
+             })
+             return ;
+         }
+         //需要做个跳转即可
+         window.location.href="http://www.gaoxi.com/courselist.html?page="+1+"&num="+everyPageDataNum+"&filterOp="+tfilterOp+"&searchType=2";
+     })
 
+
+
+
+
+
+
+    //若是用点击了筛选按钮
      $("#doFilter").click(function () {
          //拼接过滤条件
          var tfilterOp="";
@@ -271,7 +345,7 @@
              resultOp=tfilterOp.substring(1);
          }
          //需要做个跳转即可
-         window.location.href="http://www.gaoxi.com/courselist.html?page="+1+"&num="+everyPageDataNum+"&filterOp="+resultOp;
+         window.location.href="http://www.gaoxi.com/courselist.html?page="+1+"&num="+everyPageDataNum+"&filterOp="+resultOp+"&searchType=1";
      })
     $(function () {
         /*必须加上这一句不然tooltip无效果*/
