@@ -139,6 +139,30 @@
         </div>
     </div>
 </div>
+<!--历史模拟考试得分折线图+分数预测-->
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title clearfix">
+                        个人历史考试分数折线图
+                        <button class="btn-success btn pull-right" id="doScorePre">分数预测</button>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div id="historyScoreChart" style="height: 300px;"></div>
+                </div>
+                <div class="panel-footer">
+                    历史分数+分数预测
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 
 
 <div style="height: 50px;"></div>
@@ -152,6 +176,11 @@
     $("#modal-container-912437").load("login.html");
     var nowUrl = window.location.href;
     var ctype = nowUrl.split("?")[1].split("=")[1];
+    var user_token=$.cookie("user_token");
+    if(user_token==undefined||user_token==""){
+        window.location.href="http://www.gaoxi.com/index.html";
+    }
+
 
     var rankVue = new Vue({
         el: "#rankVue",
@@ -252,50 +281,162 @@
 
 
 
+        //答题时间统计;
         var rankEcharts = echarts.init(document.getElementById('rankEcharts'));
-        //学习进度统计;
-        var option = {
-            color: ['#3398DB'],
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-                    type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-                }
+        //获取各个时间段的交卷情况
+        $.ajax({
+            url : "http://www.gaoxi.com/subjects/getExamUseTime",
+            type : "GET",
+            data:{"cType":ctype},
+            //   async: false,
+            success : function(res){
+                rankEcharts.setOption({
+                    color: ['#3398DB'],
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: [
+                        {
+                            type: 'category',
+                            data: ['小于5分钟', '5分钟~10分钟', '10分钟~20分钟', '20~30分钟', '大于30分钟'],
+                            axisTick: {
+                                alignWithLabel: true
+                            }
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value'
+                        }
+                    ],
+                    series: [
+                        {
+                            name: '直接访问',
+                            type: 'bar',
+                            barWidth: '50%',
+                            data: res.data
+                        }
+                    ]
+                });
+
             },
-            grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                containLabel: true
-            },
-            xAxis: [
-                {
-                    type: 'category',
-                    data: ['小于5分钟', '5分钟~10分钟', '10分钟~20分钟', '20~30分钟', '大于30分钟'],
-                    axisTick: {
-                        alignWithLabel: true
-                    }
-                }
-            ],
-            yAxis: [
-                {
-                    type: 'value'
-                }
-            ],
-            series: [
-                {
-                    name: '直接访问',
-                    type: 'bar',
-                    barWidth: '50%',
-                    data: [10, 52, 200, 334, 390]
-                }
-            ]
-        };
-        rankEcharts.setOption(option);
+            error : function(){
+                console.log('请求失败');
+            }
+        });
+
+
+
+
+
+
         //异步请求代码
 
 
         //***********
+
+        //个人历史得分折线图
+        var historyScoreEchart=echarts.init(document.getElementById("historyScoreChart"));
+        var allScore;
+        var allDoExamTime;
+        $.ajax({
+            url : "http://www.gaoxi.com/subjects/getHistoryExamScore",
+            type : "GET",
+            data:{"cType":ctype,"userToken":user_token},
+            success : function(res){
+                var historyRecord = res.data;
+
+                allDoExamTime=historyRecord.map(function (v) {
+                    return v.doExamTime;
+                })
+                allScore=historyRecord.map(function (v) {
+                    return v.score;
+                })
+
+                historyScoreEchart.setOption(
+                    {
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        xAxis: {
+                            type: 'category',
+                            data: allDoExamTime
+                        },
+                        yAxis: {
+                            type: 'value'
+                        },
+                        dataZoom: [{
+                            type: 'inside',
+                            start: 50,
+                            end: 100
+                        },{
+                            start: 0,
+                            end: 100
+
+                        }
+                        ],
+                        series: [{
+                            data: allScore,
+                            type: 'line',
+                            smooth: true
+                        }]
+                    }
+                );
+
+
+
+            },
+            error : function(){
+                console.log('请求失败');
+            }
+        });
+
+
+
+
+    $("#doScorePre").click(function () {
+        //console.log(allScore)
+        if(allScore==undefined||allScore.length==0){
+            swal({
+                title: "阿拉丁神灯预测",
+                text: "参加几次模拟考试再来吧",
+                icon: "warning",
+                button: "我知道了"
+            })
+        }else{
+            var preScore;
+            if(allScore.length<=5){
+                var sum=0;
+                for(var i=0;i<allScore.length;i++){
+                    sum+=allScore[i];
+                }
+                preScore=parseInt(sum/allScore.length);
+            }else{
+                var sum=0;
+                for(var i=allScore.length-5;i<allScore.length;i++){
+                    sum+=allScore[i];
+                }
+                preScore=parseInt(sum/5);
+            }
+            swal({
+                title: "阿拉丁神灯预测",
+                text: ""+preScore+"分",
+                icon: "success",
+                button: "我知道了"
+            })
+        }
+    });
+
+
 
 
         //暂时未完工

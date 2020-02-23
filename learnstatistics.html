@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>徐州工程学院思政课学习管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="css/common.css">
+    <!--验证码css-->
+    <link rel="stylesheet" href="css/verify.css">
+
+    <!--vue.js-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/jquery.cookie.js"></script>
+    <script src="js/jquery.timers.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="js/echarts.js"></script>
+</head>
+<body>
+<div class="navbar navbar-inverse" id="commonhead"></div>
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="index.html">主页</a>
+                </li>
+                <li class="active">
+                    学习情况统计
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--标题-->
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <blockquote>
+                <p>
+                    个人学习统计
+                </p> <small>仅供参考</small>
+            </blockquote>
+        </div>
+    </div>
+</div>
+<!--题目完成情况-->
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-6 column">
+            <div id="myPieChart" style="height: 250px"></div>
+        </div>
+        <div class="col-md-6 column">
+            <div id="sxPieChart" style="height: 250px"></div>
+        </div>
+    </div>
+    <div class="row clearfix">
+        <div class="col-md-6 column">
+            <div id="jdsPieChart" style="height: 300px"></div>
+        </div>
+        <div class="col-md-6 column">
+            <div id="mgPieChart" style="height: 300px"></div>
+        </div>
+    </div>
+</div>
+<!--考试最高得分情况-->
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-6 column">
+            <div id="scoreRadar" style="height: 250px;"></div>
+        </div>
+        <div class="col-md-6 column">
+            <div id="scoreAvgChart" style="height: 250px;"></div>
+        </div>
+    </div>
+</div>
+
+<!--各个类型视频加入学习数量-->
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-6 column">
+            <div id="videoCourseLearnNum" style="height: 250px;"></div>
+        </div>
+        <div class="col-md-6 column">
+        </div>
+    </div>
+</div>
+
+
+
+<div style="height: 50px;"></div>
+<footer class="white-wrapper"></footer>
+<!--登录注册模态框-->
+<div class="modal fade" id="modal-container-912437" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+</div>
+<script>
+    $("#commonhead").load("head.html");
+    $(".white-wrapper").load("foot.html");
+    $("#modal-container-912437").load("login.html");
+
+    var user_token=$.cookie("user_token");
+    if(user_token==undefined||user_token==""){
+        window.location.href="http://www.gaoxi.com/index.html";
+    }
+
+
+    var myPieEchart=echarts.init(document.getElementById("myPieChart"));
+    var sxPieEchart=echarts.init(document.getElementById("sxPieChart"));
+    var jdsPieEchart=echarts.init(document.getElementById("jdsPieChart"));
+    var mgPieEchart=echarts.init(document.getElementById("mgPieChart"));
+
+
+    var pieOption={
+        title: {
+            text: '某站点用户访问来源',
+            subtext: '纯属虚构',
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b} : {c} ({d}%)'
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left',
+            data: ['已做单选题', '已做多选题','已做判断题','未做单选题', '未做多选题','未做判断题']
+        },
+        series: [
+            {
+                name: '访问来源',
+                type: 'pie',
+                radius: '55%',
+                center: ['50%', '60%'],
+                data: [
+                    {value: 335, name: '已做单选题'},
+                    {value: 310, name: '已做多选题'},
+                    {value: 234, name: '已做判断题'},
+                    {value: 135, name: '未做单选题'},
+                    {value: 135, name: '未做多选题'},
+                    {value: 1548, name: '未做判断题'}
+                ],
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+    //myPieEchart 数据查询
+    $.ajax({
+        url : "http://www.gaoxi.com/subjects/getPersonalStat",
+        type : "GET",
+        data:{stype:'1',"userToken":user_token},
+     //   async: false,
+        success : function(res){
+            myPieEchart.setOption({
+                title: {
+                    text: '马原个人做题记录',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b} : {c} ({d}%)'
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                    data: ['已做单选题', '已做多选题','已做判断题','未做单选题', '未做多选题','未做判断题']
+                },
+                series: [
+                    {
+                        name: '访问来源',
+                        type: 'pie',
+                        radius: '55%',
+                        center: ['50%', '60%'],
+                        data: res.data,
+                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            });
+
+
+
+        },
+        error : function(){
+            console.log('请求失败');
+        }
+    });
+
+    //sxPieEchart 数据查询
+    $.ajax({
+        url : "http://www.gaoxi.com/subjects/getPersonalStat",
+        type : "GET",
+        data:{stype:'2',"userToken":user_token},
+        //   async: false,
+        success : function(res){
+            sxPieEchart.setOption({
+                title: {
+                    text: '思修个人做题记录',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b} : {c} ({d}%)'
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                    data: ['已做单选题', '已做多选题','已做判断题','未做单选题', '未做多选题','未做判断题']
+                },
+                series: [
+                    {
+                        name: '访问来源',
+                        type: 'pie',
+                        radius: '55%',
+                        center: ['50%', '60%'],
+                        data: res.data,
+                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            });
+        },
+        error : function(){
+            console.log('请求失败');
+        }
+    });
+
+
+    //jdsPieEchart 数据查询
+    $.ajax({
+        url : "http://www.gaoxi.com/subjects/getPersonalStat",
+        type : "GET",
+        data:{stype:'3',"userToken":user_token},
+        //   async: false,
+        success : function(res){
+            jdsPieEchart.setOption(  {
+                title: {
+                    text: '近代史做题情况',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b} : {c} ({d}%)'
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                    data:  ['已做单选题', '已做多选题','已做判断题','未做单选题', '未做多选题','未做判断题']
+                },
+                toolbox: {
+                    show: true,
+                    feature: {
+                        mark: {show: true},
+                        dataView: {show: true, readOnly: false},
+                        magicType: {
+                            show: true,
+                            type: ['pie', 'funnel']
+                        },
+                        restore: {show: true},
+                        saveAsImage: {show: true}
+                    }
+                },
+                series: [
+
+                    {
+                        name: '做题情况',
+                        type: 'pie',
+                        radius: [30, 110],
+                        roseType: 'area',
+                        data: res.data
+                    }
+                ]
+            });
+        },
+        error : function(){
+            console.log('请求失败');
+        }
+    });
+
+    //mgPieEchart 数据查询
+    $.ajax({
+        url : "http://www.gaoxi.com/subjects/getPersonalStat",
+        type : "GET",
+        data:{stype:'4',"userToken":user_token},
+        //   async: false,
+        success : function(res){
+            mgPieEchart.setOption(  {
+                title: {
+                    text: '毛概做题情况',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b} : {c} ({d}%)'
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                    data:  ['已做单选题', '已做多选题','已做判断题','未做单选题', '未做多选题','未做判断题']
+                },
+                toolbox: {
+                    show: true,
+                    feature: {
+                        mark: {show: true},
+                        dataView: {show: true, readOnly: false},
+                        magicType: {
+                            show: true,
+                            type: ['pie', 'funnel']
+                        },
+                        restore: {show: true},
+                        saveAsImage: {show: true}
+                    }
+                },
+                series: [
+
+                    {
+                        name: '做题情况',
+                        type: 'pie',
+                        radius: [30, 110],
+                        roseType: 'area',
+                        data: res.data
+                    }
+                ]
+            });
+        },
+        error : function(){
+            console.log('请求失败');
+        }
+    });
+
+
+
+    //得分雷达图
+    var scroeRadarEcharts=echarts.init(document.getElementById("scoreRadar"));
+    //获取各科最高分
+    $.ajax({
+        url : "http://www.gaoxi.com/subjects/getAllExamMaxScore",
+        type : "GET",
+        data:{"userToken":user_token},
+        //   async: false,
+        success : function(res){
+            scroeRadarEcharts.setOption(
+                {
+                    title: {
+                        text: '各科历史最高分数'
+                    },
+                    tooltip:{},
+                    radar: {
+                        name: {
+                            textStyle: {
+                                color: '#fff',
+                                backgroundColor: '#999',
+                                borderRadius: 3,
+                                padding: [3, 5]
+                            }
+                        },
+                        indicator: [
+                            { name: '马原模拟考试最高分', max: 100},
+                            { name: '思修模拟考试最高分', max: 100},
+                            { name: '近代史模拟考试最高分', max: 100},
+                            { name: '毛概模拟考试最高分', max: 100}
+                        ]
+                    },
+                    series: [{
+                        name: '各科模拟考试最高分',
+                        type: 'radar',
+                        data: [
+                            {
+                                value: res.data,
+                                name: '各科模拟考试最高分'
+                            }
+                        ]
+                    }]
+                }
+
+
+            );
+
+
+                   },
+        error : function(){
+            console.log('请求失败');
+        }
+    });
+
+
+
+
+    //模拟考试平均得分
+    var scoreAvgEchart=echarts.init(document.getElementById("scoreAvgChart"));
+    $.ajax({
+        url : "http://www.gaoxi.com/subjects/getAllExamAvgScore",
+        type : "GET",
+        data:{"userToken":user_token},
+        //   async: false,
+        success : function(res){
+            scoreAvgEchart.setOption( {
+                title: {
+                    text: '各科模拟考试平均分',
+                    left: 'center'
+                },
+                color: ['#3398DB'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: ['马原', '思修', '近代史', '毛概'],
+                        axisTick: {
+                            alignWithLabel: true
+                        }
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+                series: [
+                    {
+                        name: '模拟平均分',
+                        type: 'bar',
+                        barWidth: '60%',
+                        data: res.data
+                    }
+                ]
+            });
+
+        },
+        error : function(){
+            console.log('请求失败');
+        }
+    });
+
+
+    //各类课程视频加入学习的量
+    var videoCourseLearnNumChart=echarts.init(document.getElementById("videoCourseLearnNum"));
+    $.ajax({
+        url : "http://www.gaoxi.com/courses/getPersonalAllLearnNum",
+        type : "GET",
+        data:{"userToken":user_token},
+        //   async: false,
+        success : function(res){
+            videoCourseLearnNumChart.setOption({
+                title: {
+                    text: '各类型课程学习量',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: ['马原课程', '思修课程', '近代史课程', '毛概课程'],
+                        axisTick: {
+                            alignWithLabel: true
+                        }
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+                series: [
+                    {
+                        name: '视频课程学习数量',
+                        type: 'bar',
+                        barWidth: '60%',
+                        data: res.data
+                    }
+                ]
+            });
+
+        },
+        error : function(){
+            console.log('请求失败');
+        }
+    });
+
+    $(function () {
+        //暂时未完工
+        /*必须加上这一句不然tooltip无效果*/
+        $("[data-toggle='tooltip']").tooltip();
+    });
+</script>
+</body>
+</html>
