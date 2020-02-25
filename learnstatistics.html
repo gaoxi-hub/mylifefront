@@ -113,51 +113,11 @@
     var jdsPieEchart=echarts.init(document.getElementById("jdsPieChart"));
     var mgPieEchart=echarts.init(document.getElementById("mgPieChart"));
 
-
-    var pieOption={
-        title: {
-            text: '某站点用户访问来源',
-            subtext: '纯属虚构',
-            left: 'center'
-        },
-        tooltip: {
-            trigger: 'item',
-            formatter: '{a} <br/>{b} : {c} ({d}%)'
-        },
-        legend: {
-            orient: 'vertical',
-            left: 'left',
-            data: ['已做单选题', '已做多选题','已做判断题','未做单选题', '未做多选题','未做判断题']
-        },
-        series: [
-            {
-                name: '访问来源',
-                type: 'pie',
-                radius: '55%',
-                center: ['50%', '60%'],
-                data: [
-                    {value: 335, name: '已做单选题'},
-                    {value: 310, name: '已做多选题'},
-                    {value: 234, name: '已做判断题'},
-                    {value: 135, name: '未做单选题'},
-                    {value: 135, name: '未做多选题'},
-                    {value: 1548, name: '未做判断题'}
-                ],
-                emphasis: {
-                    itemStyle: {
-                        shadowBlur: 10,
-                        shadowOffsetX: 0,
-                        shadowColor: 'rgba(0, 0, 0, 0.5)'
-                    }
-                }
-            }
-        ]
-    };
     //myPieEchart 数据查询
     $.ajax({
         url : "http://www.gaoxi.com/subjects/getPersonalStat",
         type : "GET",
-        data:{stype:'1',"userToken":user_token},
+        data:{stype:'1',"userToken":user_token,"mode":'0'},
      //   async: false,
         success : function(res){
             myPieEchart.setOption({
@@ -192,8 +152,6 @@
                 ]
             });
 
-
-
         },
         error : function(){
             console.log('请求失败');
@@ -204,7 +162,7 @@
     $.ajax({
         url : "http://www.gaoxi.com/subjects/getPersonalStat",
         type : "GET",
-        data:{stype:'2',"userToken":user_token},
+        data:{stype:'2',"userToken":user_token,"mode":'0'},
         //   async: false,
         success : function(res){
             sxPieEchart.setOption({
@@ -249,7 +207,7 @@
     $.ajax({
         url : "http://www.gaoxi.com/subjects/getPersonalStat",
         type : "GET",
-        data:{stype:'3',"userToken":user_token},
+        data:{stype:'3',"userToken":user_token,"mode":'0'},
         //   async: false,
         success : function(res){
             jdsPieEchart.setOption(  {
@@ -300,7 +258,7 @@
     $.ajax({
         url : "http://www.gaoxi.com/subjects/getPersonalStat",
         type : "GET",
-        data:{stype:'4',"userToken":user_token},
+        data:{stype:'4',"userToken":user_token,"mode":'0'},
         //   async: false,
         success : function(res){
             mgPieEchart.setOption(  {
@@ -355,7 +313,7 @@
     $.ajax({
         url : "http://www.gaoxi.com/subjects/getAllExamMaxScore",
         type : "GET",
-        data:{"userToken":user_token},
+        data:{"userToken":user_token,"mode":0},
         //   async: false,
         success : function(res){
             scroeRadarEcharts.setOption(
@@ -410,7 +368,7 @@
     $.ajax({
         url : "http://www.gaoxi.com/subjects/getAllExamAvgScore",
         type : "GET",
-        data:{"userToken":user_token},
+        data:{"userToken":user_token,"mode":0},
         //   async: false,
         success : function(res){
             scoreAvgEchart.setOption( {
@@ -467,7 +425,7 @@
     $.ajax({
         url : "http://www.gaoxi.com/courses/getPersonalAllLearnNum",
         type : "GET",
-        data:{"userToken":user_token},
+        data:{"userToken":user_token,"mode":0},
         //   async: false,
         success : function(res){
             videoCourseLearnNumChart.setOption({

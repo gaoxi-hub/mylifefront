@@ -219,7 +219,7 @@ function sendMessage() {
 
 //进行注册
 $("#doregNow").click(function () {
-    if($("#regname").hasClass("has-success")&&checkPwd()&&checkPhoneCode()&&checkImgCap()){
+    if($("#reggroup").hasClass("has-success")&&checkPwd()&&checkPhoneCode()&&checkImgCap()){
         console.log("进行注册");
         //提交
         $.ajax({
@@ -242,7 +242,7 @@ $("#doregNow").click(function () {
 
                 }else{
                     regShow.css("display","block");
-                    regTip.text("注册失败");
+                    regTip.text(res.retinfo);
                 }
 
             },
@@ -251,8 +251,11 @@ $("#doregNow").click(function () {
             }
         });
     }else {
-        regTip.text("手机号错误");
-        regShow.css("display","block");
+       if(!$("#reggroup").hasClass("has-success")){
+           regTip.text("手机号错误");
+
+       }
+       regShow.css("display","block");
         console.log("用户信息有误");
     }
 });
