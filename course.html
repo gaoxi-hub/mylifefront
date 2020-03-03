@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/pldir/pl.css">
     <!--评分-->
     <link rel="stylesheet" href="css/pldir/plstar.css">
+    <!--分页-->
     <link rel="stylesheet" type="text/css" href="./css/page/zxf_page.css">
 
 
@@ -67,7 +68,7 @@
                                 <p>
                                     <span class="label label-info">观看人数:{{headInfo.vcLearnNum}}</span>
                                     <span class="label-danger label">作者:{{headInfo.courseAuthor}}</span>
-                                    <span class="label-warning label">{{ cctype}}</span>
+                                    <span class="label-warning label">{{cctype}}</span>
                                 </p>
                                 <p>
                                 <h3 style="color: red">{{ ccprice }}</h3>
@@ -93,6 +94,9 @@
                     </div>
                 </div>
             </div>
+
+
+
             <!--视频tab-->
             <div class="tabbable" id="tabs-185254">
                 <ul class="nav nav-tabs">
@@ -209,8 +213,8 @@
     $("#modal-container-912437").load("login.html");
     //获取courseId
     var nowhref = window.location.href;
-    //alert(nowhref);
     var courseId = nowhref.split('?')[1].split("=")[1];
+    //获取课程号
     console.log("课程号为:" + courseId);
     var cTypeName = ["", "马原", "思修", "近代史", "毛概"];
 
@@ -226,13 +230,13 @@
                     courseImgUrl: "http://q4334xp0f.bkt.clouddn.com/20745CB8F35EF31164F6991276FF507F.jpg",
                     courseName: "毛泽东思想和中国特色社会主义理论体系概论",
                     courseAuthor: "高溪",
-                    courseCType: 4,
-                    totalResNum: 20,
-                    vcLearnNum: 1,
-                    learnNum: 10,
-                    courseType: 0,
-                    coursePrice: 0,
-                    yourState: 0
+                    courseCType: 4,  // 毛概、思修？
+                    totalResNum: 20, //总资源数
+                    vcLearnNum: 1, //学习的人数
+                    learnNum: 10, //该用户完成学习的视频数
+                    courseType: 0, //收费类型
+                    coursePrice: 0, //收费价格
+                    yourState: 0  //个人状态
                 },
                 btnEnable: false
             },
@@ -247,6 +251,7 @@
                 },
                 //计算学习状态
                 mylearn: function () {
+                    //若状态为0则为当前未加入学习
                     if (this.headInfo.yourState == 0) {
                         this.btnEnable = true;
                         return "加入学习";
@@ -305,7 +310,6 @@
                     //跳转到支付页面
                     if(this.headInfo.courseType!=0){
                         window.location.href="http://www.gaoxi.com/courses/goAliPay?userToken="+user_token+"&courseId="+courseId;
-
                     }else{
                         $.ajax({
                             url: "http://www.gaoxi.com/courses/addToMyLearnList",
@@ -339,9 +343,6 @@
                             }
                         });
                     }
-
-
-
                 }
             }
         })
@@ -454,10 +455,7 @@
                     }
                 });
             }
-
         })
-
-
     });
 
 
@@ -631,9 +629,10 @@
         });
     }
 
-    $(".fenshu").eq(0).text(0);
 
 
+
+    //重新分页
     function refreshPageContent() {
         var totalRemarks = $(".msgBox").length;
         console.log(totalRemarks);
@@ -677,6 +676,10 @@
     }
 
     refreshPageContent();
+
+    $(function () {
+        $(".fenshu").eq(0).text(0);
+    })
 
 
 </script>

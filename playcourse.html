@@ -9,6 +9,7 @@
     <!--验证码css-->
     <link rel="stylesheet" href="css/verify.css">
     <link rel="stylesheet" href="css/common.css">
+    <!--阿里播放器css-->
     <link rel="stylesheet" href="https://g.alicdn.com/de/prismplayer/2.8.7/skins/default/aliplayer-min.css" />
     <!--侧栏-->
     <link rel="stylesheet" href="css/BootSideMenu.css">
@@ -20,6 +21,7 @@
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
+    <!--阿里播放器插件-->
     <script type="text/javascript" charset="utf-8" src="https://g.alicdn.com/de/prismplayer/2.8.7/aliplayer-min.js"></script>
     <!-- 记忆组件 -->
     <script type="text/javascript" charset="utf-8" src="./js/aliplayercomponents-1.0.5.min.js"></script>
@@ -44,10 +46,6 @@
         </div>
     </div>
 </div>
-
-
-
-
 <!--播放区域-->
 <div class="container">
     <div class="row clearfix">
@@ -228,30 +226,20 @@
             var finishList=res.data;
             for(var i=0;i<finishList.length;i++){
                 if(finishList[i].userVideoResourceRel==null){
-
                 }else{
-
                     var thisUserStatus=finishList[i].userVideoResourceRel;
-
                     if(thisUserStatus.status=='0'){
-
                     }else{
-                        console.log("hello")
+                        //显示已完成的标签
                        document.getElementsByClassName("finishStatus")[i].style.display="inline";
                     }
                 }
-
-
             }
         },
         error : function(){
             console.log('请求失败');
         }
     });
-
-
-
-
 
 
 
@@ -314,15 +302,19 @@
     );
 
     function getNewVideo(nowvid){
-        //alert(nowvid);
         window.location.href="http://www.gaoxi.com/playcourse.html?courseId="+courseId+"&videoId="+nowvid;
     }
 
     var startPlay=0;
     var recordPlayTime;
     var isPaly=false;
-    $(".outter").eq(0).click(function () {
 
+    /**
+     * 三个触发播放的按钮
+     *  如果是播放状态 关闭播放清除计时器
+     *  如果是关闭状态 开始播放 设置计时器
+     */
+    $(".outter").eq(0).click(function () {
         if(!isPaly){
             isPaly=true;
             recordPlayTime=setInterval(playRecord,1000);
@@ -354,6 +346,9 @@
         }
     })
 
+
+
+    //记录的当前的播放位置
     function playRecord(){
         console.log(player.getCurrentTime());
         $.ajax({
@@ -367,20 +362,14 @@
                 console.log('请求失败');
             }
         });
-
-
-
-
-
+        //播放结束动作
         if($(".current-time").eq(0).text()==$(".duration").eq(0).text()){
-            if(startPlay==0){
+          //  if(startPlay==0){
                 clearInterval(recordPlayTime);
                 isPaly=false
-                startPlay=1;
-                //alert("完成该视频学习");
+               // startPlay=1;
+                //记录完成播放
                 document.getElementsByClassName("finishStatus")[nowPlayIndex].style.display="inline";
-
-
                 $.ajax({
                     url : "http://www.gaoxi.com/courses/recordFinishVideo",
                     type : "POST",
@@ -392,9 +381,9 @@
                         console.log('请求失败');
                     }
                 });
-            }else{
-
-            }
+            // }else{
+            //
+            // }
         }
     }
 

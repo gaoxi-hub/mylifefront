@@ -6,27 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <!--页面底部样式-->
     <link rel="stylesheet" href="css/common.css">
-    <!--验证码css-->
+    <!--图片滑动验证码css-->
     <link rel="stylesheet" href="css/verify.css">
     <style>
+        /*轮播区图片格式*/
         #carousel-345272 img {
             width: 100%;
             height: 450px;
         }
-
+        /*视频课程列表区图片文字格式*/
         .thumbnail p {
             white-space: nowrap;
             text-overflow: ellipsis;
             overflow: hidden;
         }
-
         .thumbnail img{
             height:125px;
             width:222px;
         }
     </style>
-
     <!--vue.js-->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="js/jquery-3.3.1.min.js"></script>
@@ -36,7 +36,6 @@
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </head>
 <body>
-
 
 <div class="navbar navbar-inverse" id="commonhead"></div>
 
@@ -113,6 +112,8 @@
         </div>
     </div>
 </div>
+
+
 <!--视频展示区-->
 <div class="container">
     <!--视频推荐-->
@@ -241,15 +242,12 @@
 
 
     $(function () {
-
         /*
         * 1.Vue实例的生命周期,也就是从 无---->有 ----->无 ,和人一样经历不同阶段
         * 2.created: 可以用于请求初始化的数据，此时html页面上还没有相应的dom元素
         *   ①在这里ajax请求要用同步的策略
         * 3.mounted: 页面中已经有dom了
-        *
         * */
-
         var wheelPlant=new Vue({
             el:"#wheelContainer",
             data:{
@@ -273,9 +271,10 @@
                });
            },
             methods:{
-
             }
         })
+
+
 
 
         var videoRecom=new Vue({

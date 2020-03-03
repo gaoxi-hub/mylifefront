@@ -82,10 +82,7 @@
                         <input type="checkbox" class="styled courseList" id="inlineCheckbox5" value="option1" checked>
                         <label for="inlineCheckbox5"> 学习量多优先 </label>
                     </div>
-
-
                 </li>
-
                 <li class="pull-left">
                     &nbsp;&nbsp;
                     <button class="btn btn-success" id="doFilter">开始筛选</button>
@@ -162,24 +159,25 @@
 
 
 
+     //每次刷新页面，就会 获取
+     /* nowPage：当前页
+        everyPageDataNum：12
+        filterOp: 过滤项、搜索关键字
+        searchType: 是搜索还是过滤
+     */
      var nowurl=window.location.href;
      console.log(nowurl);
      var args=nowurl.split("?")[1].split("&");
-
      var nowPage=args[0].split("=")[1];
      var everyPageDataNum=args[1].split("=")[1];
      var filterOp=args[2].split("=")[1];
      var searchType=args[3].split("=")[1];
-
-
-
      //1.根据url中的内容设置单选，多选框内容
      $(".courseList").prop("checked", false);
-
      //1~5  1~4 不选默认全选
      if(filterOp!=undefined&&filterOp!=''){
          var checkedArr=filterOp.split("-");
-         //alert(checkedArr);
+         // 设置多选框的勾选状态
          for(var i=0;i<checkedArr.length;i++){
              $(".courseList").eq(checkedArr[i]-1).prop("checked",true);
          }
@@ -221,6 +219,7 @@
          }
      });
 
+     //若是筛选搜索
      if(searchType==1){
          $.ajax({
              url : "http://www.gaoxi.com/courses/getCourseList",
@@ -228,7 +227,6 @@
              data:{"page":nowPage,"size":everyPageDataNum,"filterOp": filterOp},
              async:false,
              success : function(res){
-
                  //获取得了   count总数据条数,   本页的数据,
                  //1.计算totalPage
                  var totalPage=Math.ceil(res.data.count/everyPageDataNum);
@@ -244,9 +242,7 @@
                  console.log('请求失败');
              }
          });
-
      }else{
-         console.log()
          //elasticSearch搜索
          $.ajax({
              url : "http://www.gaoxi.com/courses/videoSearch",
@@ -265,7 +261,6 @@
                      }).then((value) => {
                          window.location.href="http://www.gaoxi.com/courselist.html?page=1&num=12&filterOp=1-2-3-4-5&searchType=1";
                      });
-
                  }else{
                      //1.计算totalPage
                      var totalPage=Math.ceil(res.data.count/everyPageDataNum);
@@ -323,12 +318,6 @@
          window.location.href="http://www.gaoxi.com/courselist.html?page="+1+"&num="+everyPageDataNum+"&filterOp="+tfilterOp+"&searchType=2";
      })
 
-
-
-
-
-
-
     //若是用点击了筛选按钮
      $("#doFilter").click(function () {
          //拼接过滤条件
@@ -341,7 +330,6 @@
          }
          var resultOp="";
          if(tfilterOp!=""){
-             //alert("筛选项"+tfilterOp.substring(1));
              resultOp=tfilterOp.substring(1);
          }
          //需要做个跳转即可
