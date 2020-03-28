@@ -102,6 +102,7 @@
                                     </td>
                                     <td>
                                         <a class="glyphicon glyphicon-cloud" :href="['http://www.gaoxi.com/admins/downLoadFile?fileUrl='+item]">下载此文件</a>
+                                        <a class="glyphicon glyphicon-eye-open" :href="['http://www.gaoxi.com/admins/scanFileByPDF?fileUrl='+item]" target="_blank">预览此文件</a>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -375,9 +376,6 @@
 
 
     $(function () {
-
-
-
         var totalStu=stuFinishTable.stuFinishInfo.length;
         var noFinishSum=0;
         for(var i=0;i<stuFinishTable.stuFinishInfo.length;i++){
