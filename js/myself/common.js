@@ -1,14 +1,17 @@
+//滑块验证码的验证状态
 var captcha=0;
 /*打开注册弹框并，关闭登录框*/
 function goRegister() {
     //表单重置
     $("#regform")[0].reset();
+    //注册提示信息展示
     $("#regshow").css("display","none");
+    //错误消除
+    $("#regname").parent().removeClass("has-error");
+    //Tab栏注册高亮
     $('#myTab li:eq(1) a').tab('show');
     //拼图拖动验证
-    console.log(captcha);
     captcha=0;
-
 }
 /*跳转到登录页面*/
 function goLogin() {
@@ -48,11 +51,10 @@ $('#mpanel4').slideVerify({
     }
 });
 
-
+//填写提示
 var regTip=$("#regtip");
+//填写信息是否展示
 var regShow=$("#regshow");
-
-
 //检验手机格式
 function checkPhone(){
     var regphone=$("#regname").val();
@@ -98,10 +100,13 @@ function checkPhone(){
 
     }
 }
+
+
+
 //注册栏监听
 $("#regname").change(checkPhone);
 
-
+//密码检测
 $("#regpwd").change(checkPwd);
 
 //检验密码长度
@@ -188,7 +193,6 @@ function downSec(){
 $("#captchabtn").click(sendMessage);
 //发送验证验证码
 function sendMessage() {
-    console.log('hello')
     if(checkPhone()){
         var regphone=$("#regname").val();
         //请求发送信息
@@ -211,9 +215,8 @@ function sendMessage() {
             }
         });
     }else{
-
+        //手机号不对不发送短信
     }
-
 }
 
 
@@ -310,7 +313,6 @@ if(user_token!=undefined&&user_token!='')
                 if(userInfo.userImg !=''){   $("#userimg").attr("src",userInfo.userImg);}
                 $("#username").text(userInfo.userName);
             }
-
         },
         error : function(){
             alert('请求失败');
