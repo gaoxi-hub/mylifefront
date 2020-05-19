@@ -13,10 +13,8 @@
     <link rel="stylesheet" href="css/pldir/pl.css">
     <!--评分-->
     <link rel="stylesheet" href="css/pldir/plstar.css">
-    <!--分页-->
+    <!--评论分页-->
     <link rel="stylesheet" type="text/css" href="./css/page/zxf_page.css">
-
-
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery.cookie.js"></script>
@@ -25,7 +23,6 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="js/starjs/starScore.js"></script>
     <script type="text/javascript" src="./js/page/zxf_page.js"></script>
-
 </head>
 <body>
 <div class="navbar navbar-inverse" id="commonhead"></div>
@@ -628,10 +625,6 @@
             $(this).css("width", www);
         });
     }
-
-
-
-
     //重新分页
     function refreshPageContent() {
         var totalRemarks = $(".msgBox").length;
@@ -675,13 +668,13 @@
         });
     }
 
+
     refreshPageContent();
+
 
     $(function () {
         $(".fenshu").eq(0).text(0);
     })
-
-
 </script>
 </body>
 </html>
