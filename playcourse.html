@@ -203,6 +203,29 @@
         }
     }
 
+    var danmukuList = [{"vrId":1,"mode":1,"text":"1000","stime":"3000.33","color":"0xffffff","size":"50"}];
+
+    //获取初始化弹幕
+    $.ajax({
+        url : "http://www.gaoxi.com/courses/getAllDanmuList",
+        type : "GET",
+        data:{"vrId":videoId},
+        async:false,
+        success : function(res){
+            danmukuList = res.data;
+            console.log(danmukuList)
+        },
+        error : function(){
+            console.log('请求失败');
+        }
+    });
+
+
+
+
+
+
+
     //获取视频完成情况
     $.ajax({
         url : "http://www.gaoxi.com/courses/getVideoFinishStatus",
@@ -282,11 +305,134 @@
                 'name': 'MemoryPlayComponent',
                 'type': AliPlayerComponent.MemoryPlayComponent,
                 'args':[false,getTime,saveTime]
+            },{
+                name: 'AliplayerDanmuComponent',
+                type: AliPlayerComponent.AliplayerDanmuComponent,
+                args: [danmukuList]
             }]
         }, function (player) {
             console.log("The player is created");
         }
     );
+    //将弹幕插入队列中
+    function doInsert(msg){
+        //alert("hello")
+        console.log(player.getComponent("AliplayerDanmuComponent"));
+        var trueMsg=JSON.parse(msg)
+        player.getComponent("AliplayerDanmuComponent").CM.insert(trueMsg)
+
+
+    }
+    //player.getComponent("AliplayerDanmuComponent").insert({"vrId":3,"mode":1,"text":"dddddd","stime":"5210","size":"25","color":"0xFF0000"});
+    WebSocketTest();
+    function WebSocketTest()
+    {
+        if ("WebSocket" in window)
+        {
+            // 打开一个 web socket
+            //         var ws = new WebSocket("ws://www.gaoxi.com/courses/videodanmu/"+videoId);
+            var ws = new WebSocket("ws://localhost:10002/videodanmu/"+videoId);
+
+            ws.onopen = function()
+            {
+            /*    // Web Socket 已连接上，使用 send() 方法发送数据
+               // ws.send("发送数据");
+                console.log("数据发送中...");*/
+            };
+            //有消息推送过来后
+            ws.onmessage = function (evt)
+            {
+                var received_msg = evt.data;
+                console.log(received_msg);
+               // player.getComponent("AliplayerDanmuComponent").insert(received_msg);
+                doInsert(received_msg);
+                console.log("数据已接收...");
+                //获取初始化弹幕
+            };
+
+            ws.onclose = function()
+            {
+                // 关闭 websocket
+                console.log("连接已关闭...");
+            };
+        }
+        else
+        {
+            // 浏览器不支持 WebSocket
+            console.log("您的浏览器不支持 WebSocket!");
+        }
+    }
+
+
+    //单击发送按钮，触发发送逻辑
+    $(".danmu-input-enter").click(function () {
+        if(!nowDanmutext==""){
+            //生成弹幕对象
+            var oneDanMu={
+                vrId:videoId,
+                mode:1,
+                text:nowDanmutext,
+                stime:parseInt(player.getCurrentTime()*1000)
+            }
+            //加入弹幕队列
+           // player.getComponent("AliplayerDanmuComponent").insert(oneDanMu);
+            //发到后台保存
+            $.ajax({
+                url : "http://www.gaoxi.com/courses/addOneDanMu",
+                type : "POST",
+                dataType:'json',
+                headers: {'Content-Type': 'application/json'},
+                data:JSON.stringify(oneDanMu),
+                success : function(res){
+
+                },
+                error : function(){
+                    console.log('请求失败');
+                }
+            });
+
+
+        }
+
+
+    })
+    //记录当前的一个弹幕信息
+    var nowDanmutext=""
+    //保存弹幕信息
+    $(".ali-danmu-input").children("input").keyup(function(e){
+        //若果是回车按下去了，只要不为"" ,就发送出去
+        if(e.originalEvent.key=="Enter"){
+            if(nowDanmutext!=""){
+                console.log("hello")
+                //生成弹幕对象
+                var oneDanMu={
+                    vrId:videoId,
+                    mode:1,
+                    text:nowDanmutext,
+                    stime:parseInt(player.getCurrentTime()*1000)
+                }
+                //加入弹幕队列
+                //发到后台保存
+                $.ajax({
+                    url : "http://www.gaoxi.com/courses/addOneDanMu",
+                    type : "POST",
+                    dataType:'json',
+                    headers: {'Content-Type': 'application/json'},
+                    data:JSON.stringify(oneDanMu),
+                    success : function(res){
+
+                    },
+                    error : function(){
+                        console.log('请求失败');
+                    }
+                });
+
+            }
+        }
+        //
+        nowDanmutext=$(".ali-danmu-input").children("input").val()
+
+    })
 
     function getNewVideo(nowvid){
         window.location.href="http://www.gaoxi.com/playcourse.html?courseId="+courseId+"&videoId="+nowvid;
