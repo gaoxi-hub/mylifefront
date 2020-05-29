@@ -232,10 +232,12 @@
     }
     //*******************
 
+
     //获取任务的id号
     var nowurl=window.location.href;
     var tId=nowurl.split("?")[1].split("=")[1];
     console.log(tId);
+
 
     var taskInfoApp=new Vue({
         el:"#taskInfoVue",
@@ -303,12 +305,8 @@
                     alert('请求失败');
                 }
             });
-
-
         }
-
     })
-
 
     function startTimeDown(endTime){
         $.leftTime(endTime,function(d){
@@ -428,7 +426,8 @@
         };
         finishChart.setOption(option);
         //异步请求上交数据
-            $.ajax({
+   /* 当时是以为需要一个接口的，后来发现不需要，删除即可
+     $.ajax({
                 url : "http://www.gaoxi.com/courses/getUserDoSubjectStatus",
                 type : "GET",
                 data:{"tId":tId},
@@ -449,14 +448,7 @@
                 error : function(){
                     console.log('请求失败');
                 }
-            });
-
-
-
-
-
-
-
+            });*/
 
         /*必须加上这一句不然tooltip无效果*/
         $("[data-toggle='tooltip']").tooltip();

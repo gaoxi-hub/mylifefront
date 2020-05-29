@@ -246,6 +246,7 @@
 
 
 
+    //我的班级主要信息：班级、老师信息、班级作业信息
     var mainInfo=new Vue({
         el:"#mainInfo",
         data:{
@@ -293,12 +294,6 @@
                     //
                     // that.courseInfo.cName=res.data.classInfo.teacherInfo.courseInfo.cName;
                     // that.courseInfo.cDescr=res.data.classInfo.teacherInfo.courseInfo.cDescr;
-
-
-
-
-
-
                 },
                 error: function () {
                     console.log('请求失败');
